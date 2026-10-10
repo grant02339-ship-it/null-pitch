@@ -1,0 +1,535 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Null for Firms</title>
+<style>
+  :root{
+    --bg:#ffffff; --bg-alt:#f5f5f7; --surface:#ffffff; --line:rgba(0,0,0,.08);
+    --ink:#1d1d1f; --ink-dim:#86868b; --ink-faint:#a1a1a6;
+    --accent:#0066cc; --accent-strong:#0071e3; --accent-ink:#ffffff; --accent-soft:#e8f0fb;
+    --accent2:#7c3aed; --accent2-soft:#f1e9fd;
+    --good:#1d7a3c; --good-soft:#e7f5ea; --bad:#c23b2a; --bad-soft:#fbe9e6;
+    --font:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    --radius:18px; --radius-pill:980px;
+    --glow:radial-gradient(60% 55% at 18% 8%, color-mix(in srgb, var(--accent-strong) 16%, transparent), transparent 60%),
+           radial-gradient(55% 50% at 86% 0%, color-mix(in srgb, var(--accent2) 14%, transparent), transparent 65%);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#000000; --bg-alt:#1d1d1f; --surface:#000000; --line:rgba(255,255,255,.12);
+      --ink:#f5f5f7; --ink-dim:#86868b; --ink-faint:#6e6e73;
+      --accent:#2997ff; --accent-strong:#0a84ff; --accent-ink:#ffffff; --accent-soft:#0d1f30;
+      --accent2:#b985ff; --accent2-soft:#241337;
+      --good:#30d158; --good-soft:#0f2e18; --bad:#ff453a; --bad-soft:#3a120f;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#000000; --bg-alt:#1d1d1f; --surface:#000000; --line:rgba(255,255,255,.12);
+    --ink:#f5f5f7; --ink-dim:#86868b; --ink-faint:#6e6e73;
+    --accent:#2997ff; --accent-strong:#0a84ff; --accent-ink:#ffffff; --accent-soft:#0d1f30;
+    --accent2:#b985ff; --accent2-soft:#241337;
+    --good:#30d158; --good-soft:#0f2e18; --bad:#ff453a; --bad-soft:#3a120f;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.47059;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--font);font-weight:600;letter-spacing:-0.015em;margin:0;text-wrap:balance}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:22px}
+  @media (max-width:640px){.wrap{padding-inline:18px}}
+  .eyebrow{font-size:.78rem;letter-spacing:.02em;color:var(--ink-dim);font-weight:600}
+  code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.92em;background:var(--bg-alt);padding:.15em .4em;border-radius:5px}
+  .rule{height:1px;background:var(--line);border:0;margin:0}
+  section{padding-block:84px}
+  @media (max-width:640px){section{padding-block:54px}}
+  .bg-alt{background:var(--bg-alt)}
+  .section-head{margin-bottom:40px;max-width:680px;margin-inline:auto;text-align:center}
+  .section-head h2{font-size:clamp(1.7rem,3.6vw,2.5rem)}
+  .section-head p{color:var(--ink-dim);margin:14px 0 0;font-size:1.08rem}
+  .chevron::after{content:" \203A";font-weight:600}
+
+  @media (prefers-reduced-motion: no-preference){
+    .hero h1,.hero p.lede,.hero .cta-row{animation:rise .7s cubic-bezier(.16,1,.3,1) both}
+    .hero p.lede{animation-delay:.08s}
+    .hero .cta-row{animation-delay:.16s}
+    @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  }
+
+  header.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb, var(--bg) 82%, transparent);
+             backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding-block:13px}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.98rem}
+  .brand .dot{width:8px;height:8px;border-radius:2px;background:var(--accent-strong);transform:rotate(45deg)}
+  .nav-links{display:flex;gap:28px;font-size:.84rem}
+  .nav-links a{color:var(--ink)}
+  .nav-links a:hover{color:var(--ink-dim);text-decoration:none}
+
+  .hero{padding-block:96px 56px;text-align:center;position:relative;overflow:clip}
+  .hero::before{content:"";position:absolute;inset:0;background:var(--glow);z-index:-1;pointer-events:none}
+  .hero .wrap{max-width:780px}
+  .hero h1{font-size:clamp(2.3rem,6vw,3.6rem);line-height:1.08;font-weight:700}
+  .hero h1 .grad{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));
+                  -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lede{font-size:1.22rem;color:var(--ink-dim);margin:18px auto 0;max-width:600px}
+  .cta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:30px;align-items:center;justify-content:center}
+  .btn-solid{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));color:var(--accent-ink);
+             border:1px solid transparent;border-radius:var(--radius-pill);
+             padding:12px 24px;font-size:.98rem;font-weight:500;box-shadow:0 8px 24px -10px color-mix(in srgb, var(--accent-strong) 55%, transparent)}
+  .btn-solid:hover{text-decoration:none;opacity:.9}
+  .cta-row > a.chevron{font-size:1rem;font-weight:500;padding-top:12px}
+
+  .track-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media (max-width:900px){.track-grid{grid-template-columns:1fr}}
+  .track{border-radius:var(--radius);padding:30px 26px;background:var(--surface);border:1px solid var(--line);
+         position:relative;overflow:clip;transition:transform .25s ease,box-shadow .25s ease}
+  .track::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+                  background:linear-gradient(90deg,var(--accent-strong),var(--accent2))}
+  .track:hover{transform:translateY(-3px);box-shadow:0 16px 32px -18px color-mix(in srgb, var(--ink) 25%, transparent)}
+  .bg-alt .track{background:var(--bg)}
+  .track .icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+               font-size:1.2rem;margin-bottom:16px;background:var(--accent-soft);color:var(--accent-strong)}
+  .track.featured .icon{background:linear-gradient(135deg,var(--accent-soft),var(--accent2-soft));color:var(--accent2)}
+  .track .status{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;letter-spacing:.02em;
+                  border-radius:999px;padding:5px 12px;margin-bottom:16px}
+  .track.proven .status{color:var(--good);background:var(--good-soft)}
+  .track.early .status{color:var(--accent-strong);background:var(--accent-soft)}
+  .track h3{font-size:1.18rem;font-weight:600}
+  .track p{color:var(--ink-dim);margin:12px 0 0;font-size:.95rem}
+  .track ul{margin:16px 0 0;padding-left:20px;color:var(--ink-dim);font-size:.92rem}
+  .track li{margin-top:7px}
+
+  .layer-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+  @media (max-width:760px){.layer-grid{grid-template-columns:1fr}}
+  .layer{border-radius:var(--radius);padding:28px;background:var(--surface);border:1px solid var(--line);
+         border-left:3px solid var(--accent-strong)}
+  .layer:nth-child(2){border-left-color:var(--accent2)}
+  .bg-alt .layer{background:var(--bg)}
+  .layer .tag{font-size:.76rem;font-weight:600;color:var(--ink-faint)}
+  .layer h3{font-size:1.12rem;margin-top:8px;font-weight:600}
+  .layer p{color:var(--ink-dim);margin:10px 0 0;font-size:.94rem}
+
+  .stat-grid{display:flex;align-items:stretch;gap:20px;justify-content:center;flex-wrap:wrap}
+  .stat{flex:1;min-width:240px;max-width:340px;text-align:center;padding:30px 24px;border-radius:var(--radius);
+        background:var(--surface);border:1px solid var(--line)}
+  .stat-label{font-size:.78rem;font-weight:600;letter-spacing:.02em;color:var(--ink-faint)}
+  .stat-num{font-family:var(--font);font-size:clamp(2rem,5.5vw,2.9rem);font-weight:700;letter-spacing:-0.02em;margin:8px 0 10px;color:var(--ink-dim)}
+  .stat.hl{background:linear-gradient(165deg,color-mix(in srgb, var(--accent-strong) 10%, var(--surface)),var(--surface));
+           border-color:color-mix(in srgb, var(--accent-strong) 35%, var(--line))}
+  .stat.hl .stat-num{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));
+                      -webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat p{color:var(--ink-dim);font-size:.92rem;margin:0}
+  .stat-arrow{font-size:1.8rem;color:var(--accent2);font-weight:300;align-self:center}
+  @media (max-width:640px){.stat-arrow{transform:rotate(90deg)}}
+
+  .incidents{display:flex;flex-direction:column;gap:16px}
+  .incident{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 28px 26px;
+            border-top:3px solid var(--accent2)}
+  .bg-alt .incident{background:var(--bg)}
+  .incident-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+  .incident-no{font-size:.78rem;color:var(--ink-faint)}
+  .stamp{font-size:.72rem;font-weight:600;color:var(--good);background:var(--good-soft);border-radius:999px;padding:5px 12px}
+  .incident h3{font-size:1.14rem;font-weight:600;margin-top:10px}
+  .incident p{color:var(--ink-dim);margin:10px 0 0;max-width:700px;font-size:.96rem}
+  .metric-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .metric{font-size:.84rem;background:var(--bg-alt);border-radius:8px;padding:7px 12px}
+  .bg-alt .metric{background:var(--surface);border:1px solid var(--line)}
+  .metric b{color:var(--good);font-weight:600}
+
+  .flow{display:flex;flex-direction:column;gap:20px;max-width:680px;margin-inline:auto}
+  .flow-step{display:flex;gap:18px;align-items:flex-start;text-align:left}
+  .flow-n{font-weight:600;color:var(--accent-strong);font-size:.92rem;min-width:28px}
+  .flow-step p{margin:0;color:var(--ink-dim)}
+  .flow-step strong{color:var(--ink)}
+
+  .boundary-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:760px){.boundary-grid{grid-template-columns:1fr}}
+  .boundary{border-radius:var(--radius);padding:26px;border:1px solid var(--line)}
+  .boundary .fn{font-weight:600;font-size:.92rem}
+  .boundary.is .fn{color:var(--good)}
+  .boundary.isnt .fn{color:var(--bad)}
+  .boundary ul{margin:12px 0 0;padding-left:18px;color:var(--ink-dim);font-size:.92rem;text-align:left}
+  .boundary li{margin-top:6px}
+
+  .engage-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:760px){.engage-grid{grid-template-columns:1fr}}
+  .engage{border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--surface);text-align:left}
+  .bg-alt .engage{background:var(--bg)}
+  .engage.featured{border-color:var(--accent-strong)}
+  .engage .fn{font-weight:600;font-size:1.06rem}
+  .engage .price{color:var(--accent-strong);font-weight:500;margin-top:4px;font-size:.96rem}
+  .engage p{color:var(--ink-dim);margin:12px 0 0;font-size:.94rem}
+
+  .install-box{display:flex;align-items:center;gap:10px;background:var(--bg-alt);color:var(--ink);border-radius:999px;
+               padding:10px 8px 10px 20px;font-size:.92rem;border:1px solid var(--line)}
+  .copy-btn{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;
+            font-size:.78rem;padding:7px 14px;cursor:pointer;white-space:nowrap}
+  .copy-btn:hover{border-color:var(--accent-strong)}
+
+  .submit-box{max-width:640px;margin-top:40px;padding:32px;border-radius:var(--radius);
+              border:1px solid var(--line);background:var(--surface)}
+  .submit-box h3{font-size:1.1rem;font-weight:600;margin-bottom:20px}
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:.84rem;font-weight:600;margin-bottom:7px}
+  .field label .opt{color:var(--ink-faint);font-weight:500}
+  .submit-box input,.submit-box select,.submit-box textarea{
+    width:100%;font:inherit;font-size:.96rem;padding:12px 14px;border-radius:12px;
+    border:1px solid var(--line);background:var(--bg);color:var(--ink);
+  }
+  .submit-box textarea{resize:vertical;min-height:90px;font-family:ui-monospace,'SF Mono',Menlo,monospace}
+  .submit-box input:focus,.submit-box select:focus,.submit-box textarea:focus{outline:2px solid var(--accent-strong);outline-offset:1px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:560px){.row2{grid-template-columns:1fr}}
+  .hint{font-size:.82rem;color:var(--ink-faint);margin-top:6px}
+  .submit-box .btn-solid{width:100%;border:0;cursor:pointer}
+  .err{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--bad-soft);
+       color:var(--bad);font-size:.88rem}
+  .sent{display:none;text-align:center;padding:24px 0}
+  .sent .check{width:52px;height:52px;border-radius:50%;background:var(--good-soft);color:var(--good);
+               display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 16px}
+  .sent h3{font-size:1.1rem}
+  .sent p{color:var(--ink-dim);margin:8px auto 0;max-width:400px;font-size:.92rem}
+
+  footer{border-top:1px solid var(--line);padding-block:30px;color:var(--ink-faint);font-size:.82rem;text-align:center}
+  footer .disclaimer{max-width:680px;margin:14px auto 0;font-size:.8rem;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand"><span class="dot"></span> null / firms</div>
+    <nav class="nav-links">
+      <a href="#selfgrading">Verify it</a>
+      <a href="#capabilities">Capabilities</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#engage">Engage</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Research help for investment firms</p>
+    <h1>Give your analysts back <span class="grad">the hours they lose to reading</span></h1>
+    <p class="lede">News, SEC filings, and analyst coverage, read and structured in minutes instead of
+      hours, so your team covers more names without hiring more people. You don't have to take our word
+      for it: run it on your own watchlist and watch every call get checked against what actually
+      happened, in real time, not a track record we're asking you to trust secondhand.</p>
+    <div class="cta-row">
+      <a class="btn-solid" href="#engage">Verify it on your own names</a>
+      <a class="chevron" href="#how">See how this works</a>
+    </div>
+  </div>
+</section>
+
+<section id="selfgrading" class="bg-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Verify it yourself, not on our word</p>
+      <h2>Run it on your own names and watch it get checked against reality</h2>
+      <p>Most "AI reads the news" tools hand you a read and move on, and ask you to trust the pitch. This
+        one is built to be verified instead: every read is logged (the call, the confidence, the price at
+        the time) and checked later against the real, realized price move, using free market data, on
+        whatever names you give it. If confidence has never actually tracked being right, that's a finding
+        you'll see, not a result we'd hide.</p>
+    </div>
+    <div class="layer-grid">
+      <div class="layer">
+        <div class="tag">Self-grading: plain math, not AI</div>
+        <h3>A real, checkable track record, building on your own watchlist</h3>
+        <p>Every logged call is scored against what the stock actually did, split out by how confident the
+          call said it was, so you can see directly whether higher stated confidence has meant more often
+          right, or whether it hasn't. This isn't marketed as "self-improving," a claim no LLM can honestly
+          make about itself. This is accountability to real outcomes you can audit yourself, which is
+          different, and more useful.</p>
+      </div>
+      <div class="layer">
+        <div class="tag">Calibration audit: where AI re-enters, bounded</div>
+        <h3>Finding its own blind spots, never a trading rule</h3>
+        <p>Once there's enough real, graded history on your names, Claude analyzes its own track record
+          directly, not a person guessing at patterns by hand. The output has no field for "what to do
+          next" or a return estimate, only descriptive findings about this tool's own past accuracy, each
+          required to cite its real sample size. It declines to run at all below a real minimum sample,
+          since a pattern found in too few outcomes is noise, not a finding, and the tool is built to know
+          the difference.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="capacity">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">What this actually changes</p>
+      <h2>The reading used to be the bottleneck. Now it isn't.</h2>
+      <p>This extends your team rather than replacing it. The same people can cover five names in the time
+        it used to take to read one, because the slow part no longer eats the day.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">The old way</div>
+        <div class="stat-num">An hour or two</div>
+        <p>per filing or per name, read and briefed by hand</p>
+      </div>
+      <div class="stat-arrow">→</div>
+      <div class="stat hl">
+        <div class="stat-label">What changes</div>
+        <div class="stat-num">A couple of minutes</div>
+        <p>for the first pass. A person reviews it and decides from there</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="capabilities" class="bg-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Three tools, one set of checks</p>
+      <h2>These help you research. They don't make the call for you.</h2>
+      <p>All three go through the same checks before we call anything a result, and all three get logged
+        and checked against what actually happened instead of being handed to you and forgotten.</p>
+    </div>
+    <div class="track-grid">
+      <article class="track featured">
+        <span class="icon">◆</span>
+        <h3>Underpriced-setup screening</h3>
+        <p>What sets this apart: instead of one sentiment label, this applies seven separate,
+          independently-checkable criteria, including analyst target gap, which way targets are actually
+          moving, insider buying or selling, a dated disclosure the price may not have caught up to yet,
+          fundamentals, and an active search for the strongest case against the read.</p>
+        <ul>
+          <li>Every claim comes with real numbers and a citation, never a guess</li>
+          <li>Reports how many of the seven actually converge. A single bullish data point with everything
+            else neutral doesn't clear the bar</li>
+          <li>Confidence means "how much real evidence agrees," never a forecast of how big a move will be</li>
+        </ul>
+      </article>
+      <article class="track">
+        <span class="icon">◇</span>
+        <h3>Market &amp; news reading</h3>
+        <p>Reads the last ten days of news on each name in your watchlist and tells you, in plain English,
+          what changed, why it might matter, and whether the price looks like it's already caught up to it.</p>
+        <ul>
+          <li>Says what it read, how confident it is, and links the actual sources, never an impression</li>
+          <li>Logged and checked over time, so you can see whether it holds up</li>
+        </ul>
+      </article>
+      <article class="track">
+        <span class="icon">▢</span>
+        <h3>SEC filing reading</h3>
+        <p>Reads a company's actual 10-K, 10-Q, or 8-K from the SEC, not someone else's summary of it, and
+          flags what changed since the last one.</p>
+        <ul>
+          <li>Flags tone changes and new disclosures, dated to when the filing actually went public</li>
+          <li>Finds the primary document, not a secondary summary of it, every time</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="mechanism">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How the AI part actually works</p>
+      <h2>Two layers. Only one of them is AI.</h2>
+      <p>Here's exactly what "powered by AI" means: the AI does the reading and writing. The checking is
+        just math.</p>
+    </div>
+    <div class="layer-grid">
+      <div class="layer">
+        <div class="tag">Layer 1: Checking</div>
+        <h3>Plain math, not AI</h3>
+        <p>Scoring every past read against the real price move that followed, using free market data. Split
+          out by how confident the call said it was, so you can see directly whether higher stated
+          confidence has actually meant more often right. Same input, same answer, every time. No model
+          makes this call.</p>
+      </div>
+      <div class="layer">
+        <div class="tag">Layer 2: Research</div>
+        <h3>Where the AI actually works</h3>
+        <p>Claude reads the filings and the news, searches systematically rather than stopping at the first
+          plausible result, and turns what it finds into a structured read: a sentiment, a confidence level,
+          and the actual sources it used. It's fast. It can also sound confident while it's wrong, which is
+          exactly why it never skips the layer above.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="evidence" class="bg-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Built, not just promised</p>
+      <h2>Tested hard enough to find real problems before anyone else could</h2>
+      <p>Every one of these was caught in our own testing, before a result ever reached anyone outside this
+        project. None of it was something a customer ever saw or was affected by. It's shown here because a
+        tool that has never found a real problem in itself usually just hasn't looked hard enough.</p>
+    </div>
+    <div class="incidents">
+      <article class="incident">
+        <div class="incident-top">
+          <span class="incident-no">Caught in testing: Hedging instead of deciding</span>
+          <span class="stamp">Fixed and confirmed same day</span>
+        </div>
+        <h3>Three different stocks, the same evasive non-answer</h3>
+        <p>Three internal test runs on three unrelated tickers all independently landed on "mixed,
+          confidence 0.55." Not because the evidence actually tied, but because the prompt only told the
+          model when to lower confidence, never when to commit. Fixed with one instruction: decide which
+          way the preponderance of evidence leans, and reserve "mixed" for genuine toss-ups. Confirmed
+          against four follow-up names before trusting it.</p>
+        <div class="metric-row">
+          <span class="metric">Caught at: <b>internal testing</b></span>
+          <span class="metric">Fix confirmed on: <b>4 follow-up names</b></span>
+        </div>
+      </article>
+      <article class="incident">
+        <div class="incident-top">
+          <span class="incident-no">Caught in testing: A read that kept flip-flopping</span>
+          <span class="stamp">Fixed before anyone relied on it</span>
+        </div>
+        <h3>Stopping at the first plausible search gave an unstable read</h3>
+        <p>An early test run on a biotech name with a pending FDA decision changed direction across repeat
+          runs, because the research step stopped as soon as it had enough to write something plausible and
+          missed the actual FDA briefing document that would have changed the read. Fixed by requiring a
+          systematic search for primary documents, and an active search for the strongest evidence against
+          the current read, before concluding anything.</p>
+        <div class="metric-row">
+          <span class="metric">Caught at: <b>internal testing</b></span>
+          <span class="metric">Fix confirmed on: <b>4 unrelated situations</b></span>
+        </div>
+      </article>
+      <article class="incident">
+        <div class="incident-top">
+          <span class="incident-no">Caught in testing: A cost ceiling that wasn't there</span>
+          <span class="stamp">Fixed same day, verified on re-run</span>
+        </div>
+        <h3>A pending-acquisition name found a gap in the budget</h3>
+        <p>Testing against a company with an announced buyout exposed a real gap: asking for an ordinary
+          analyst price target on a name like that is a question without a clean answer, so the research
+          step searched further than it should have. Fixed twice the same day, with a guard that recognizes
+          a pending deal and redirects to the real number (the deal spread), plus a hard ceiling so no
+          single request can run past a few minutes, on any tool, for any reason. Verified fixed on a live
+          re-run.</p>
+        <div class="metric-row">
+          <span class="metric">Found during: <b>internal testing</b></span>
+          <span class="metric">Worst case now: <b>minutes, bounded, every time</b></span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How working together looks</p>
+      <h2>Your data never leaves your systems</h2>
+    </div>
+    <div class="flow">
+      <div class="flow-step"><span class="flow-n">01</span><p><strong>We scope it.</strong> A short call to define exactly what gets covered: a watchlist, a set of filings, one real question. Not open access to your whole book, and nothing starts until we've both agreed what the report will actually answer.</p></div>
+      <div class="flow-step"><span class="flow-n">02</span><p><strong>It runs on your side.</strong> Against your own data feeds, on your systems or a private environment you control. Nothing about your watchlist or your research sits on a public server, and nothing gets reused for anyone else's work.</p></div>
+      <div class="flow-step"><span class="flow-n">03</span><p><strong>You get a written report, not a black box.</strong> What it found, how confident it is, and why. Confidence levels and the actual sources it read, plus a section left blank on purpose for your own judgment before anything goes further.</p></div>
+      <div class="flow-step"><span class="flow-n">04</span><p><strong>NDA first, always.</strong> Signed before we see anything specific about your watchlist or your names, not after. Standard for every engagement, no exceptions.</p></div>
+      <div class="flow-step"><span class="flow-n">05</span><p><strong>You decide what's next.</strong> Act on it, ignore it, or come back with a follow-up question. The report is yours either way, and there's no obligation to continue past what we scoped.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="boundaries" class="bg-alt">
+  <div class="wrap">
+    <div class="boundary-grid">
+      <div class="boundary is">
+        <div class="fn">This is</div>
+        <ul>
+          <li>Faster research, plus the checks that keep it honest</li>
+          <li>A way to cover five names in the time it used to take to read one, with the team you already have</li>
+          <li>Seven independently-checkable claims per name, not one sentiment label, backed by a real,
+            logged track record checked against what actually happened, not a marketing claim</li>
+          <li>A method tested on our own work, mistakes included, as above</li>
+          <li>An early partnership. The first clients help shape what this becomes, with direct access to the
+            person building it instead of an account manager relaying your questions</li>
+        </ul>
+      </div>
+      <div class="boundary isnt">
+        <div class="fn">This isn't</div>
+        <ul>
+          <li>A guaranteed edge, or investment advice of any kind</li>
+          <li>Asset management. Your money and your trades stay yours</li>
+          <li>A pitch to cut your team. It's a pitch to get more out of it</li>
+          <li>A one-time test. Every call gets logged and checked against what actually happened, so the
+            track record keeps building the longer you use it</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="engage">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Working together</p>
+      <h2>Two ways to start</h2>
+      <p>Nothing here is a fixed price. These are starting points for a real conversation, and neither one
+        asks you to take a track record on faith before you've seen it work on your own names.</p>
+    </div>
+    <div class="engage-grid">
+      <div class="engage featured">
+        <div class="fn">Pilot</div>
+        <div class="price">Starting around $3,000</div>
+        <p>This is the verification step, not a sales demo. We run it on your own watchlist, your own
+          filings, or one real question you already have, and you watch the self-grading happen on your
+          own names in real time. Small enough that neither side is risking much.</p>
+      </div>
+      <div class="engage">
+        <div class="fn">Ongoing partnership</div>
+        <div class="price">Retainer, scoped together</div>
+        <p>Continued research across your watchlist, with the same checks built in every time, so the
+          verified track record from the pilot keeps growing instead of resetting to zero.</p>
+      </div>
+    </div>
+    <div class="submit-box">
+      <h3>Ready to start?</h3>
+      <p>Submit a watchlist and it goes straight to the person who runs the research, not a queue a team
+        triages.</p>
+      <a href="intake.html" class="btn-solid"
+         style="display:block;text-align:center;text-decoration:none;margin-top:18px">Submit a watchlist</a>
+    </div>
+
+    <div class="cta-row" style="margin-top:20px;justify-content:flex-start">
+      <div class="install-box">
+        <code id="contact-email">grant02339@gmail.com</code>
+        <button class="copy-btn" onclick="copyEmail()" id="copy-email-btn">Copy</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>null / firms</span>
+    <p class="disclaimer">This isn't investment advice, a signal service, or asset management. It's
+      research help: faster search, plus the checks that keep it honest and a real, growing track record
+      behind every read. Every incident on this page is real, caught in testing before it ever reached
+      anyone. Nothing here says any read makes money.</p>
+  </div>
+</footer>
+
+<script>
+function copyEmail(){
+  var text = document.getElementById('contact-email').textContent;
+  var btn = document.getElementById('copy-email-btn');
+  function done(ok){ btn.textContent = ok ? 'Copied' : 'Select + ⌘C'; setTimeout(function(){ btn.textContent='Copy'; }, 1400); }
+  try{ navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(false); }); }
+  catch(e){ done(false); }
+}
+</script>
+
+</body>
+</html>
