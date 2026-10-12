@@ -207,7 +207,6 @@
     <nav class="nav-links">
       <a href="#selfgrading">Track Record</a>
       <a href="#capabilities">Capabilities</a>
-      <a href="#evidence">Evidence</a>
       <a href="#engage">Engage</a>
     </nav>
   </div>
@@ -216,11 +215,10 @@
 <section class="hero">
   <div class="wrap">
     <p class="eyebrow">An expedited research tool for investment firms</p>
-    <h1>Give your analysts back <span class="grad">the hours they lose to reading</span></h1>
+    <h1>Give your analysts back <span class="grad">their time</span></h1>
     <p class="lede">This is a research tool, not investment advice. It reads news, SEC filings, and
-      analyst coverage on any name on your watchlist, and returns a dated, sourced report in minutes
-      instead of hours. Every call is logged and checked later against what actually happened, so the
-      accuracy is measurable, not just claimed.</p>
+      analyst coverage, and returns a dated, sourced report in minutes instead of hours. Every call is
+      logged and checked against what actually happened.</p>
     <div class="cta-row">
       <a class="btn-solid" href="#engage">Start a research request</a>
       <a class="chevron" href="#how">See how this works</a>
@@ -233,30 +231,21 @@
     <div class="section-head">
       <p class="eyebrow">How accuracy is tracked</p>
       <h2>Every call is logged and checked against what actually happened</h2>
-      <p>Most AI research tools hand you a read and move on. This one logs each call: the stated read,
-        the confidence level, and the price at the time. Later, it is checked against the real, realized
-        price move using public market data. If stated confidence has not actually tracked being right,
-        that result is reported too.</p>
+      <p>Each call is logged: the read, the confidence, and the price at the time. It's checked later
+        against the real outcome, using public market data.</p>
     </div>
     <div class="layer-grid">
       <div class="layer">
-        <div class="tag">Self-grading: plain math, not AI</div>
-        <h3>A real, checkable track record, building on your own watchlist</h3>
-        <p>Every logged call is scored against what the stock actually did, split out by how confident the
-          call said it was, so you can see directly whether higher stated confidence has meant more often
-          right, or whether it hasn't. This isn't marketed as "self-improving," a claim no LLM can honestly
-          make about itself. This is accountability to real outcomes you can audit yourself, which is
-          different, and more useful.</p>
+        <div class="tag">Self-grading</div>
+        <h3>A real, checkable track record</h3>
+        <p>Every call is scored against what actually happened, split out by stated confidence. This is
+          accountability to outcomes, not a claim that the tool improves itself.</p>
       </div>
       <div class="layer">
-        <div class="tag">Calibration audit: where AI re-enters, bounded</div>
-        <h3>Finding its own blind spots, never a trading rule</h3>
-        <p>Once there's enough real, graded history on your names, Claude analyzes its own track record
-          directly, not a person guessing at patterns by hand. The output has no field for "what to do
-          next" or a return estimate, only descriptive findings about this tool's own past accuracy, each
-          required to cite its real sample size. It declines to run at all below a real minimum sample,
-          since a pattern found in too few outcomes is noise, not a finding, and the tool is built to know
-          the difference.</p>
+        <div class="tag">Calibration audit</div>
+        <h3>Finding blind spots, never a trading rule</h3>
+        <p>Once there's enough graded history, Claude reviews its own track record for patterns. The
+          output is descriptive only, never a recommendation, and each finding cites its sample size.</p>
       </div>
     </div>
   </div>
@@ -291,42 +280,34 @@
     <div class="section-head">
       <p class="eyebrow">Three tools, one set of checks</p>
       <h2>These help you research. They don't make the call for you.</h2>
-      <p>All three go through the same checks before we call anything a result, and all three get logged
-        and checked against what actually happened instead of being handed to you and forgotten.</p>
+      <p>All three are logged and checked against what actually happened. None of them decide for you.</p>
     </div>
     <div class="track-grid">
       <article class="track featured">
         <span class="icon">◆</span>
         <h3>Underpriced-setup screening</h3>
-        <p>What sets this apart: instead of one sentiment label, this applies seven separate,
-          independently-checkable criteria, including analyst target gap, which way targets are actually
-          moving, insider buying or selling, a dated disclosure the price may not have caught up to yet,
-          fundamentals, and an active search for the strongest case against the read.</p>
+        <p>Applies seven independently-checkable criteria, including analyst target gap, insider activity,
+          and an active search for the strongest case against the read.</p>
         <ul>
-          <li>Every claim comes with real numbers and a citation, never a guess</li>
-          <li>Reports how many of the seven actually converge. A single bullish data point with everything
-            else neutral doesn't clear the bar</li>
-          <li>Confidence means "how much real evidence agrees," never a forecast of how big a move will be</li>
+          <li>Every claim comes with a real number and a citation</li>
+          <li>Confidence reflects evidence agreement, never a forecast of move size</li>
         </ul>
       </article>
       <article class="track">
         <span class="icon">◇</span>
         <h3>Market &amp; news reading</h3>
-        <p>Reads the last ten days of news on each name in your watchlist and tells you, in plain English,
-          what changed, why it might matter, and whether the price looks like it's already caught up to it.</p>
+        <p>Reads the last ten days of news on a name and explains what changed and whether the price has
+          already caught up to it.</p>
         <ul>
-          <li>Says what it read, how confident it is, and links the actual sources, never an impression</li>
-          <li>Logged and checked over time, so you can see whether it holds up</li>
+          <li>Every source is cited and logged for later review</li>
         </ul>
       </article>
       <article class="track">
         <span class="icon">▢</span>
         <h3>SEC filing reading</h3>
-        <p>Reads a company's actual 10-K, 10-Q, or 8-K from the SEC, not someone else's summary of it, and
-          flags what changed since the last one.</p>
+        <p>Reads a company's actual 10-K, 10-Q, or 8-K and flags what changed since the last filing.</p>
         <ul>
-          <li>Flags tone changes and new disclosures, dated to when the filing actually went public</li>
-          <li>Finds the primary document, not a secondary summary of it, every time</li>
+          <li>Always the primary document, never a secondary summary</li>
         </ul>
       </article>
     </div>
@@ -358,69 +339,6 @@
           and the actual sources it used. It's fast. It can also sound confident while it's wrong, which is
           exactly why it never skips the layer above.</p>
       </div>
-    </div>
-  </div>
-</section>
-
-<section id="evidence" class="bg-alt">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">Built, not just promised</p>
-      <h2>Tested hard enough to find real problems before anyone else could</h2>
-      <p>Every one of these was caught in our own testing, before a result ever reached anyone outside this
-        project. None of it was something a customer ever saw or was affected by. It's shown here because a
-        tool that has never found a real problem in itself usually just hasn't looked hard enough.</p>
-    </div>
-    <div class="incidents">
-      <article class="incident">
-        <div class="incident-top">
-          <span class="incident-no">Caught in testing: Hedging instead of deciding</span>
-          <span class="stamp">Fixed and confirmed same day</span>
-        </div>
-        <h3>Three different stocks, the same evasive non-answer</h3>
-        <p>Three internal test runs on three unrelated tickers all independently landed on "mixed,
-          confidence 0.55." Not because the evidence actually tied, but because the prompt only told the
-          model when to lower confidence, never when to commit. Fixed with one instruction: decide which
-          way the preponderance of evidence leans, and reserve "mixed" for genuine toss-ups. Confirmed
-          against four follow-up names before trusting it.</p>
-        <div class="metric-row">
-          <span class="metric">Caught at: <b>internal testing</b></span>
-          <span class="metric">Fix confirmed on: <b>4 follow-up names</b></span>
-        </div>
-      </article>
-      <article class="incident">
-        <div class="incident-top">
-          <span class="incident-no">Caught in testing: A read that kept flip-flopping</span>
-          <span class="stamp">Fixed before anyone relied on it</span>
-        </div>
-        <h3>Stopping at the first plausible search gave an unstable read</h3>
-        <p>An early test run on a biotech name with a pending FDA decision changed direction across repeat
-          runs, because the research step stopped as soon as it had enough to write something plausible and
-          missed the actual FDA briefing document that would have changed the read. Fixed by requiring a
-          systematic search for primary documents, and an active search for the strongest evidence against
-          the current read, before concluding anything.</p>
-        <div class="metric-row">
-          <span class="metric">Caught at: <b>internal testing</b></span>
-          <span class="metric">Fix confirmed on: <b>4 unrelated situations</b></span>
-        </div>
-      </article>
-      <article class="incident">
-        <div class="incident-top">
-          <span class="incident-no">Caught in testing: A cost ceiling that wasn't there</span>
-          <span class="stamp">Fixed same day, verified on re-run</span>
-        </div>
-        <h3>A pending-acquisition name found a gap in the budget</h3>
-        <p>Testing against a company with an announced buyout exposed a real gap: asking for an ordinary
-          analyst price target on a name like that is a question without a clean answer, so the research
-          step searched further than it should have. Fixed twice the same day, with a guard that recognizes
-          a pending deal and redirects to the real number (the deal spread), plus a hard ceiling so no
-          single request can run past a few minutes, on any tool, for any reason. Verified fixed on a live
-          re-run.</p>
-        <div class="metric-row">
-          <span class="metric">Found during: <b>internal testing</b></span>
-          <span class="metric">Worst case now: <b>minutes, bounded, every time</b></span>
-        </div>
-      </article>
     </div>
   </div>
 </section>
