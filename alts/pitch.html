@@ -85,16 +85,17 @@
   @media (max-width:640px){section{padding-block:44px}}
 
   /* ---- editorial index layout: sticky label rail + flowing content ---- */
-  .index-row{max-width:1180px;margin:0 auto;padding-inline:28px;display:grid;grid-template-columns:200px 1fr;gap:48px}
-  @media (max-width:760px){.index-row{grid-template-columns:1fr;gap:14px}}
-  .index-row .rail{position:sticky;top:76px;align-self:start}
-  @media (max-width:760px){.index-row .rail{position:static}}
+  .index-row{max-width:1180px;margin:0 auto;padding:56px 28px;display:grid;grid-template-columns:200px 1fr;gap:48px}
+  @media (max-width:760px){.index-row{grid-template-columns:1fr;gap:14px;padding:36px 18px}}
+  .index-row .rail{position:sticky;top:76px;align-self:start;border-left:2px solid var(--accent-strong);padding-left:16px}
+  @media (max-width:760px){.index-row .rail{position:static;border-left:0;padding-left:0}}
   .rail .num{font-family:var(--mono);font-size:.8rem;color:var(--accent-strong);font-weight:600}
   .rail .label{font-size:.92rem;font-weight:600;margin-top:4px}
   .index-row .content h2{font-size:clamp(1.5rem,3vw,2rem);margin-bottom:16px}
   .index-row .content p{color:var(--ink-dim);font-size:1.02rem;max-width:640px}
   .index-row .content p + p{margin-top:14px}
   .rule{height:1px;background:var(--line);border:0;max-width:1180px;margin:0 auto}
+  .index-row + .rule{margin-top:-1px}
 
   .pair-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px;max-width:640px}
   @media (max-width:560px){.pair-grid{grid-template-columns:1fr}}
@@ -141,8 +142,8 @@
   <div>
     <p class="eyebrow">An expedited research tool for alternative investment diligence</p>
     <h1>Fine print, read fast</h1>
-    <p class="lede">Interval funds, non-traded REITs, non-traded BDCs. Liquidity terms and fees, buried
-      on page 80, surfaced and cited.</p>
+    <p class="lede">Interval funds, non-traded REITs, non-traded BDCs. This reads the actual prospectus
+      and surfaces the liquidity terms and fees buried on page 80, each one cited.</p>
     <div class="cta-row">
       <a class="btn-solid" href="intake.html">Expedite your diligence</a>
       <a class="chevron" href="#method">See how this works</a>
@@ -167,7 +168,8 @@
   <div class="rail"><span class="num">01</span><div class="label">The problem</div></div>
   <div class="content">
     <h2>A lot to read</h2>
-    <p>Exit terms and fees are rarely summarized up front.</p>
+    <p>Exit terms and fees are rarely summarized up front. Finding them means reading the whole document
+      by hand.</p>
     <div class="pair-grid">
       <div class="pair"><div class="k">The old way</div><div class="v">An afternoon per prospectus, read by hand</div></div>
       <div class="pair"><div class="k">What changes</div><div class="v">A few minutes for the first pass, then your own review</div></div>
@@ -175,12 +177,14 @@
   </div>
 </div>
 
+<hr class="rule">
+
 <div class="index-row">
   <div class="rail"><span class="num">02</span><div class="label">What it reads</div></div>
   <div class="content">
     <h2>One tool, one document type</h2>
-    <p>Finds the fund's SEC filing (N-2, S-11, or 10-K) and reads the repurchase terms, fee layers, and
-      fund-specific risks, not boilerplate.</p>
+    <p>Finds the fund's SEC filing (N-2, S-11, or 10-K) and reads the repurchase terms, every fee layer,
+      and the risks specific to this fund, not boilerplate.</p>
     <ul class="checklist">
       <li>Every number comes from the filing, with a citation</li>
       <li>Flags terms easy to miss on a skim</li>
@@ -189,14 +193,20 @@
   </div>
 </div>
 
+<hr class="rule">
+
 <div class="index-row">
   <div class="rail"><span class="num">03</span><div class="label">How it's checked</div></div>
   <div class="content">
     <h2>Checked against reality</h2>
-    <p>No market price to check against. Instead: NAV, and whether its own terms held.</p>
-    <p>Once there's enough history, Claude reviews its own track record, never a trading rule.</p>
+    <p>No market price exists to check against. Instead: the fund's NAV, and whether its own stated
+      repurchase terms actually held or were suspended.</p>
+    <p>Once there's enough graded history, Claude reviews its own track record for patterns, never a
+      trading rule.</p>
   </div>
 </div>
+
+<hr class="rule">
 
 <div class="index-row">
   <div class="rail"><span class="num">04</span><div class="label">Working together</div></div>
@@ -205,12 +215,14 @@
     <ul class="checklist">
       <li>We scope it first: a fund, a short list, one real question</li>
       <li>It runs on your side, against your own environment</li>
-      <li>A written report, with space for your own judgment</li>
-      <li>NDA first, always</li>
+      <li>You get a written report, with space left for your own judgment</li>
+      <li>NDA first, always, before we see anything specific</li>
       <li>You decide what's next, no obligation to continue</li>
     </ul>
   </div>
 </div>
+
+<hr class="rule">
 
 <div class="index-row">
   <div class="rail"><span class="num">05</span><div class="label">Boundaries</div></div>
@@ -236,6 +248,8 @@
     </div>
   </div>
 </div>
+
+<hr class="rule">
 
 <div class="index-row" id="engage">
   <div class="rail"><span class="num">06</span><div class="label">Start</div></div>
