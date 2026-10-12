@@ -4,6 +4,9 @@
 <meta charset="utf8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Null for Alts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#ffffff; --bg-alt:#f5f5f7; --surface:#ffffff; --line:rgba(0,0,0,.08);
@@ -13,6 +16,7 @@
     --good:#1d7a3c; --good-soft:#e7f5ea; --bad:#c23b2a; --bad-soft:#fbe9e6;
     --mark:#ffe169; --mark-ink:#1d1d1f;
     --font:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    --font-head:'Fraunces',Georgia,serif;
     --mono:ui-monospace,'SF Mono',Menlo,monospace;
     --radius:18px; --radius-pill:980px;
     color-scheme:light;
@@ -40,7 +44,7 @@
 
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.5;-webkit-font-smoothing:antialiased}
-  h1,h2,h3{font-family:var(--font);font-weight:600;letter-spacing:-0.015em;margin:0;text-wrap:balance}
+  h1,h2,h3{font-family:var(--font-head);font-weight:600;letter-spacing:-0.01em;margin:0;text-wrap:balance}
   a{color:var(--accent);text-decoration:none}
   a:hover{text-decoration:underline}
   code{font-family:var(--mono)}
@@ -136,9 +140,9 @@
 <div class="hero">
   <div>
     <p class="eyebrow">An expedited research tool for alternative investment diligence</p>
-    <h1>The fine print, read fast</h1>
-    <p class="lede">Interval funds, non-traded REITs, non-traded BDCs. Surfaces the liquidity terms and
-      fees buried on page 80, with citations.</p>
+    <h1>Fine print, read fast</h1>
+    <p class="lede">Interval funds, non-traded REITs, non-traded BDCs. Liquidity terms and fees, buried
+      on page 80, surfaced and cited.</p>
     <div class="cta-row">
       <a class="btn-solid" href="intake.html">Expedite your diligence</a>
       <a class="chevron" href="#method">See how this works</a>
@@ -162,8 +166,8 @@
 <div class="index-row" id="method">
   <div class="rail"><span class="num">01</span><div class="label">The problem</div></div>
   <div class="content">
-    <h2>A lot to read by hand</h2>
-    <p>Exit terms and fees are rarely summarized up front. Finding them means reading the whole thing.</p>
+    <h2>A lot to read</h2>
+    <p>Exit terms and fees are rarely summarized up front.</p>
     <div class="pair-grid">
       <div class="pair"><div class="k">The old way</div><div class="v">An afternoon per prospectus, read by hand</div></div>
       <div class="pair"><div class="k">What changes</div><div class="v">A few minutes for the first pass, then your own review</div></div>
@@ -188,11 +192,9 @@
 <div class="index-row">
   <div class="rail"><span class="num">03</span><div class="label">How it's checked</div></div>
   <div class="content">
-    <h2>Checked against what happens next</h2>
-    <p>No market price exists to check against. Instead: the fund's NAV, and whether its own repurchase
-      terms held or were suspended.</p>
-    <p>Once there's enough history, Claude reviews its own track record, citing a real sample size, never
-      a trading rule.</p>
+    <h2>Checked against reality</h2>
+    <p>No market price to check against. Instead: NAV, and whether its own terms held.</p>
+    <p>Once there's enough history, Claude reviews its own track record, never a trading rule.</p>
   </div>
 </div>
 
