@@ -90,8 +90,6 @@
   <div class="wrap">
     <p class="eyebrow">Null for Firms. An expedited research tool.</p>
     <h1>Submit a watchlist for research</h1>
-    <p>Submit the names you want read. This is a research tool only, not investment advice. It sends
-      directly to the person who runs it, no email client required on your end.</p>
   </div>
 </section>
 
@@ -118,8 +116,7 @@
 
     <div class="field">
       <label for="tickers">Tickers or names <span class="opt">(one per line, or comma-separated)</span></label>
-      <textarea id="tickers" name="Tickers or names" required placeholder="MUDR&#10;ACME Corp (ACME)&#10;..."></textarea>
-      <p class="hint">Small-cap, thin-coverage, or special-situations names are where this tends to help most.</p>
+      <textarea id="tickers" name="Tickers or names" required></textarea>
     </div>
 
     <div class="field">
@@ -127,22 +124,9 @@
       <textarea id="notes" name="Notes" placeholder="Anything specific to check: a pending deal, an upcoming filing, a particular concern."></textarea>
     </div>
 
-    <div class="field">
-      <label for="urgency">Preferred turnaround</label>
-      <select id="urgency" name="Preferred turnaround">
-        <option value="Standard (within the week)">Standard (within the week)</option>
-        <option value="This week, specific day if possible">This week, specific day if possible</option>
-        <option value="Urgent, ASAP">Urgent, ASAP</option>
-      </select>
-    </div>
-
     <button type="submit" class="btn-solid" id="submit-btn">Send this request</button>
     <div class="err" id="err-box">Something went wrong sending this. Please try again, or email
       grant02339@gmail.com directly.</div>
-
-    <div class="note">
-      Goes straight to the person who runs the research. No queue, no bot.
-    </div>
   </form>
 
   <div class="sent" id="sent-box">
