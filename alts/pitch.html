@@ -1,0 +1,362 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Null for Alts</title>
+<style>
+  :root{
+    --bg:#ffffff; --bg-alt:#f5f5f7; --surface:#ffffff; --line:rgba(0,0,0,.08);
+    --ink:#1d1d1f; --ink-dim:#86868b; --ink-faint:#a1a1a6;
+    --accent:#0066cc; --accent-strong:#0071e3; --accent-ink:#ffffff; --accent-soft:#e8f0fb;
+    --accent2:#7c3aed; --accent2-soft:#f1e9fd;
+    --good:#1d7a3c; --good-soft:#e7f5ea; --bad:#c23b2a; --bad-soft:#fbe9e6;
+    --font:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    --radius:18px; --radius-pill:980px;
+    --glow:radial-gradient(60% 55% at 18% 8%, color-mix(in srgb, var(--accent-strong) 16%, transparent), transparent 60%),
+           radial-gradient(55% 50% at 86% 0%, color-mix(in srgb, var(--accent2) 14%, transparent), transparent 65%);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#000000; --bg-alt:#1d1d1f; --surface:#000000; --line:rgba(255,255,255,.12);
+      --ink:#f5f5f7; --ink-dim:#86868b; --ink-faint:#6e6e73;
+      --accent:#2997ff; --accent-strong:#0a84ff; --accent-ink:#ffffff; --accent-soft:#0d1f30;
+      --accent2:#b985ff; --accent2-soft:#241337;
+      --good:#30d158; --good-soft:#0f2e18; --bad:#ff453a; --bad-soft:#3a120f;
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#000000; --bg-alt:#1d1d1f; --surface:#000000; --line:rgba(255,255,255,.12);
+    --ink:#f5f5f7; --ink-dim:#86868b; --ink-faint:#6e6e73;
+    --accent:#2997ff; --accent-strong:#0a84ff; --accent-ink:#ffffff; --accent-soft:#0d1f30;
+    --accent2:#b985ff; --accent2-soft:#241337;
+    --good:#30d158; --good-soft:#0f2e18; --bad:#ff453a; --bad-soft:#3a120f;
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.47059;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--font);font-weight:600;letter-spacing:-0.015em;margin:0;text-wrap:balance}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:22px}
+  @media (max-width:640px){.wrap{padding-inline:18px}}
+  .eyebrow{font-size:.78rem;letter-spacing:.02em;color:var(--ink-dim);font-weight:600}
+  code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.92em;background:var(--bg-alt);padding:.15em .4em;border-radius:5px}
+  .rule{height:1px;background:var(--line);border:0;margin:0}
+  section{padding-block:84px}
+  @media (max-width:640px){section{padding-block:54px}}
+  .bg-alt{background:var(--bg-alt)}
+  .section-head{margin-bottom:40px;max-width:680px;margin-inline:auto;text-align:center}
+  .section-head h2{font-size:clamp(1.7rem,3.6vw,2.5rem)}
+  .section-head p{color:var(--ink-dim);margin:14px 0 0;font-size:1.08rem}
+  .chevron::after{content:" \203A";font-weight:600}
+
+  @media (prefers-reduced-motion: no-preference){
+    .hero h1,.hero p.lede,.hero .cta-row{animation:rise .7s cubic-bezier(.16,1,.3,1) both}
+    .hero p.lede{animation-delay:.08s}
+    .hero .cta-row{animation-delay:.16s}
+    @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  }
+
+  header.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb, var(--bg) 82%, transparent);
+             backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding-block:13px}
+  .brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.98rem}
+  .brand .dot{width:8px;height:8px;border-radius:2px;background:var(--accent-strong);transform:rotate(45deg)}
+  .nav-links{display:flex;gap:28px;font-size:.84rem}
+  .nav-links a{color:var(--ink)}
+  .nav-links a:hover{color:var(--ink-dim);text-decoration:none}
+
+  .hero{padding-block:96px 56px;text-align:center;position:relative;overflow:clip}
+  .hero::before{content:"";position:absolute;inset:0;background:var(--glow);z-index:-1;pointer-events:none}
+  .hero .wrap{max-width:780px}
+  .hero h1{font-size:clamp(2.3rem,6vw,3.6rem);line-height:1.08;font-weight:700}
+  .hero h1 .grad{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));
+                  -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lede{font-size:1.22rem;color:var(--ink-dim);margin:18px auto 0;max-width:600px}
+  .cta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:30px;align-items:center;justify-content:center}
+  .btn-solid{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));color:var(--accent-ink);
+             border:1px solid transparent;border-radius:var(--radius-pill);
+             padding:12px 24px;font-size:.98rem;font-weight:500;box-shadow:0 8px 24px -10px color-mix(in srgb, var(--accent-strong) 55%, transparent)}
+  .btn-solid:hover{text-decoration:none;opacity:.9}
+  .cta-row > a.chevron{font-size:1rem;font-weight:500;padding-top:12px}
+
+  .track-grid{display:grid;grid-template-columns:1fr;max-width:640px;margin-inline:auto}
+  .track{border-radius:var(--radius);padding:30px 26px;background:var(--surface);border:1px solid var(--line);
+         position:relative;overflow:clip;text-align:left}
+  .track::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
+                  background:linear-gradient(90deg,var(--accent-strong),var(--accent2))}
+  .bg-alt .track{background:var(--bg)}
+  .track .icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+               font-size:1.2rem;margin-bottom:16px;background:linear-gradient(135deg,var(--accent-soft),var(--accent2-soft));color:var(--accent2)}
+  .track h3{font-size:1.18rem;font-weight:600}
+  .track p{color:var(--ink-dim);margin:12px 0 0;font-size:.95rem}
+  .track ul{margin:16px 0 0;padding-left:20px;color:var(--ink-dim);font-size:.92rem}
+  .track li{margin-top:7px}
+
+  .layer-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
+  @media (max-width:760px){.layer-grid{grid-template-columns:1fr}}
+  .layer{border-radius:var(--radius);padding:28px;background:var(--surface);border:1px solid var(--line);
+         border-left:3px solid var(--accent-strong)}
+  .layer:nth-child(2){border-left-color:var(--accent2)}
+  .bg-alt .layer{background:var(--bg)}
+  .layer .tag{font-size:.76rem;font-weight:600;color:var(--ink-faint)}
+  .layer h3{font-size:1.12rem;margin-top:8px;font-weight:600}
+  .layer p{color:var(--ink-dim);margin:10px 0 0;font-size:.94rem}
+
+  .stat-grid{display:flex;align-items:stretch;gap:20px;justify-content:center;flex-wrap:wrap}
+  .stat{flex:1;min-width:240px;max-width:340px;text-align:center;padding:30px 24px;border-radius:var(--radius);
+        background:var(--surface);border:1px solid var(--line)}
+  .stat-label{font-size:.78rem;font-weight:600;letter-spacing:.02em;color:var(--ink-faint)}
+  .stat-num{font-family:var(--font);font-size:clamp(2rem,5.5vw,2.9rem);font-weight:700;letter-spacing:-0.02em;margin:8px 0 10px;color:var(--ink-dim)}
+  .stat.hl{background:linear-gradient(165deg,color-mix(in srgb, var(--accent-strong) 10%, var(--surface)),var(--surface));
+           border-color:color-mix(in srgb, var(--accent-strong) 35%, var(--line))}
+  .stat.hl .stat-num{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));
+                      -webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat p{color:var(--ink-dim);font-size:.92rem;margin:0}
+  .stat-arrow{font-size:1.8rem;color:var(--accent2);font-weight:300;align-self:center}
+  @media (max-width:640px){.stat-arrow{transform:rotate(90deg)}}
+
+  .flow{display:flex;flex-direction:column;gap:20px;max-width:680px;margin-inline:auto}
+  .flow-step{display:flex;gap:18px;align-items:flex-start;text-align:left}
+  .flow-n{font-weight:600;color:var(--accent-strong);font-size:.92rem;min-width:28px}
+  .flow-step p{margin:0;color:var(--ink-dim)}
+  .flow-step strong{color:var(--ink)}
+
+  .boundary-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media (max-width:760px){.boundary-grid{grid-template-columns:1fr}}
+  .boundary{border-radius:var(--radius);padding:26px;border:1px solid var(--line)}
+  .boundary .fn{font-weight:600;font-size:.92rem}
+  .boundary.is .fn{color:var(--good)}
+  .boundary.isnt .fn{color:var(--bad)}
+  .boundary ul{margin:12px 0 0;padding-left:18px;color:var(--ink-dim);font-size:.92rem;text-align:left}
+  .boundary li{margin-top:6px}
+
+  .install-box{display:flex;align-items:center;gap:10px;background:var(--bg-alt);color:var(--ink);border-radius:999px;
+               padding:10px 8px 10px 20px;font-size:.92rem;border:1px solid var(--line)}
+  .copy-btn{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;
+            font-size:.78rem;padding:7px 14px;cursor:pointer;white-space:nowrap}
+  .copy-btn:hover{border-color:var(--accent-strong)}
+
+  .submit-box{max-width:640px;margin-top:40px;padding:32px;border-radius:var(--radius);
+              border:1px solid var(--line);background:var(--surface)}
+  .submit-box h3{font-size:1.1rem;font-weight:600;margin-bottom:20px}
+
+  footer{border-top:1px solid var(--line);padding-block:30px;color:var(--ink-faint);font-size:.82rem;text-align:center}
+  footer .disclaimer{max-width:680px;margin:14px auto 0;font-size:.8rem;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand"><span class="dot"></span> null / alts</div>
+    <nav class="nav-links">
+      <a href="#capabilities">Capabilities</a>
+      <a href="#engage">Engage</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">An expedited research tool for alternative investment diligence</p>
+    <h1>Give your team back <span class="grad">the hours lost to fine print</span></h1>
+    <p class="lede">This is a research tool for alternative investment prospectuses: interval funds,
+      non-traded REITs, and non-traded BDCs. It reads the actual SEC filing and returns a dated, sourced
+      report on the liquidity terms and fee layers in minutes instead of hours.</p>
+    <div class="cta-row">
+      <a class="btn-solid" href="intake.html">Expedite your diligence</a>
+      <a class="chevron" href="#how">See how this works</a>
+    </div>
+  </div>
+</section>
+
+<section id="selfgrading" class="bg-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How accuracy is tracked</p>
+      <h2>Every read is logged and checked against what the fund does next</h2>
+      <p>Each read is logged: the stated liquidity terms, the fee layers found, and the concern level.
+        These funds have no market price to check a call against, so it's checked against something more
+        concrete instead: the fund's published NAV, and whether its own stated repurchase terms actually
+        held or were suspended.</p>
+    </div>
+    <div class="layer-grid">
+      <div class="layer">
+        <div class="tag">Self-grading</div>
+        <h3>A real, checkable track record</h3>
+        <p>Every read is checked against what the fund does next: a NAV decline, a suspended or gated
+          repurchase program, a fee change. Building a real record of which reads held up.</p>
+      </div>
+      <div class="layer">
+        <div class="tag">Calibration audit</div>
+        <h3>Finding its own blind spots</h3>
+        <p>Once there's enough graded history, Claude reviews its own track record for patterns. Each
+          finding is descriptive, citing its real sample size.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="capacity">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">What this actually changes</p>
+      <h2>Reading the fine print used to take an afternoon. Now it doesn't.</h2>
+      <p>This extends your team rather than replacing it. The same people can get through the liquidity
+        terms and fee table on every fund under consideration, then spend their time on judgment instead
+        of searching.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-label">The old way</div>
+        <div class="stat-num">An afternoon</div>
+        <p>reading one prospectus end to end, by hand</p>
+      </div>
+      <div class="stat-arrow">→</div>
+      <div class="stat hl">
+        <div class="stat-label">What changes</div>
+        <div class="stat-num">A few minutes</div>
+        <p>for the first pass. A person reviews it and decides from there</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="capabilities" class="bg-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">One tool, built for one document type</p>
+      <h2>Reads the prospectus itself</h2>
+      <p>Every read is logged and checked against what the fund actually does next.</p>
+    </div>
+    <div class="track-grid">
+      <article class="track">
+        <span class="icon">◆</span>
+        <h3>Alternative investment prospectus reader</h3>
+        <p>Finds the fund's actual SEC filing, Form N-2 for interval funds and non-traded BDCs, Form S-11
+          or 10-K for non-traded REITs, and reads the sections that matter most: the real repurchase
+          terms, every fee layer stacked on top of each other, and the risks specific to this fund, not
+          generic boilerplate.</p>
+        <ul>
+          <li>Every number comes from the filing itself, with a citation</li>
+          <li>Flags the terms that are easy to miss on a skim, not just the summary page</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="mechanism">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How the AI part actually works</p>
+      <h2>Two layers. Only one of them is AI.</h2>
+      <p>The AI does the reading and writing. The checking is just math.</p>
+    </div>
+    <div class="layer-grid">
+      <div class="layer">
+        <div class="tag">Layer 1: Checking</div>
+        <h3>Plain math</h3>
+        <p>Scores every past read against what the fund actually does next, using the fund's own public
+          disclosures. Same input, same answer, every time.</p>
+      </div>
+      <div class="layer">
+        <div class="tag">Layer 2: Research</div>
+        <h3>Where the AI actually works</h3>
+        <p>Claude reads the actual prospectus, searches systematically for the repurchase and fee
+          sections specifically, and turns what it finds into a structured read. It's fast, and checked
+          by the layer above every time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">How working together looks</p>
+      <h2>Your data never leaves your systems</h2>
+    </div>
+    <div class="flow">
+      <div class="flow-step"><span class="flow-n">01</span><p><strong>We scope it.</strong> A short call defines exactly what gets covered: a fund, a short list of funds, one real question. All of it agreed before anything starts.</p></div>
+      <div class="flow-step"><span class="flow-n">02</span><p><strong>It runs on your side.</strong> Against your own data feeds, on your systems or a private environment you control. Your research stays yours.</p></div>
+      <div class="flow-step"><span class="flow-n">03</span><p><strong>You get a written report.</strong> What it found, how confident it is, why, and the sources it read. A section is left blank on purpose for your own judgment before anything goes further.</p></div>
+      <div class="flow-step"><span class="flow-n">04</span><p><strong>NDA first, always.</strong> Signed before we see anything specific about your clients or the funds you're evaluating, not after. Standard for every engagement, no exceptions.</p></div>
+      <div class="flow-step"><span class="flow-n">05</span><p><strong>You decide what's next.</strong> Act on it, ignore it, or come back with a follow-up question. The report is yours either way. There's no obligation to continue past what we scoped.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="boundaries" class="bg-alt">
+  <div class="wrap">
+    <div class="boundary-grid">
+      <div class="boundary is">
+        <div class="fn">This is</div>
+        <ul>
+          <li>Faster diligence on complex alternative investment documents</li>
+          <li>A way to get through the liquidity terms and fee table on every fund you're evaluating, in
+            less time, with the team you already have</li>
+          <li>A structured read of a fund's own disclosed terms, backed by a real, logged track record
+            checked against what the fund actually does next</li>
+          <li>An early partnership. The first clients help shape what this becomes, with direct access to
+            the person building it instead of an account manager relaying your questions</li>
+        </ul>
+      </div>
+      <div class="boundary isnt">
+        <div class="fn">This isn't</div>
+        <ul>
+          <li>Investment advice, or a recommendation to buy, hold, or avoid any fund. Your fiduciary
+            judgment stays yours, on every fund, every time</li>
+          <li>Asset management. Your clients' money and your allocation decisions stay entirely yours</li>
+          <li>A pitch to cut your team. It's a pitch to get more out of it</li>
+          <li>A one-time test. Every read gets logged and checked against what the fund actually does
+            next, so the track record keeps building the longer you use it</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="engage">
+  <div class="wrap">
+    <div class="submit-box">
+      <h3>Expedite your diligence</h3>
+      <a href="intake.html" class="btn-solid"
+         style="display:block;text-align:center;text-decoration:none;margin-top:18px">Expedite your diligence</a>
+    </div>
+
+    <div class="cta-row" style="margin-top:20px;justify-content:flex-start">
+      <div class="install-box">
+        <code id="contact-email">grant02339@gmail.com</code>
+        <button class="copy-btn" onclick="copyEmail()" id="copy-email-btn">Copy</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>null / alts</span>
+    <p class="disclaimer">This isn't investment advice, a recommendation, or a sub-advisory arrangement.
+      It's research help: faster diligence on complex filings, plus the checks that keep it honest. Your
+      fiduciary judgment stays yours on every fund, every time.</p>
+  </div>
+</footer>
+
+<script>
+function copyEmail(){
+  var text = document.getElementById('contact-email').textContent;
+  var btn = document.getElementById('copy-email-btn');
+  function done(ok){ btn.textContent = ok ? 'Copied' : 'Select + ⌘C'; setTimeout(function(){ btn.textContent='Copy'; }, 1400); }
+  try{ navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(false); }); }
+  catch(e){ done(false); }
+}
+</script>
+
+</body>
+</html>
