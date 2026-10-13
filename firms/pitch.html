@@ -1,456 +1,503 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-<meta charset="utf8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Null for Firms</title>
+<meta name="description" content="Research help for investment firms: reads news and SEC filings on your watchlist and writes a sourced research read. No buy or sell calls.">
+<meta name="theme-color" content="#0B0B0C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Geist+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<script>
+if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('js-motion')}
+try{if(localStorage.getItem('null-theme')==='light'){document.documentElement.setAttribute('data-theme','light')}}catch(e){}
+</script>
 <style>
-  :root{
-    --bg:#ffffff; --bg-alt:#f5f5f7; --surface:#ffffff; --line:rgba(0,0,0,.08);
-    --ink:#1d1d1f; --ink-dim:#86868b; --ink-faint:#a1a1a6;
-    --accent:#0066cc; --accent-strong:#0071e3; --accent-ink:#ffffff; --accent-soft:#e8f0fb;
-    --accent2:#7c3aed; --accent2-soft:#f1e9fd;
-    --good:#1d7a3c; --good-soft:#e7f5ea; --bad:#c23b2a; --bad-soft:#fbe9e6;
-    --font:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    --radius:18px; --radius-pill:980px;
-    --glow:radial-gradient(60% 55% at 18% 8%, color-mix(in srgb, var(--accent-strong) 16%, transparent), transparent 60%),
-           radial-gradient(55% 50% at 86% 0%, color-mix(in srgb, var(--accent2) 14%, transparent), transparent 65%);
-    color-scheme:light;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#000000; --bg-alt:#1d1d1f; --surface:#000000; --line:rgba(255,255,255,.12);
-      --ink:#f5f5f7; --ink-dim:#86868b; --ink-faint:#6e6e73;
-      --accent:#2997ff; --accent-strong:#0a84ff; --accent-ink:#ffffff; --accent-soft:#0d1f30;
-      --accent2:#b985ff; --accent2-soft:#241337;
-      --good:#30d158; --good-soft:#0f2e18; --bad:#ff453a; --bad-soft:#3a120f;
-      color-scheme:dark;
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#000000; --bg-alt:#1d1d1f; --surface:#000000; --line:rgba(255,255,255,.12);
-    --ink:#f5f5f7; --ink-dim:#86868b; --ink-faint:#6e6e73;
-    --accent:#2997ff; --accent-strong:#0a84ff; --accent-ink:#ffffff; --accent-soft:#0d1f30;
-    --accent2:#b985ff; --accent2-soft:#241337;
-    --good:#30d158; --good-soft:#0f2e18; --bad:#ff453a; --bad-soft:#3a120f;
-    color-scheme:dark;
-  }
+:root{
+  /* dark is the default; the sheet stays paper-white in both themes, so paper tokens don't change */
+  --bg:#0B0B0C; --bg-2:#161618; --bg-3:#222225; --line:rgba(237,237,234,.11); --line-2:rgba(237,237,234,.26);
+  --text:#EDEDEA; --muted:#9A9A95; --nav-bg:rgba(11,11,12,.82);
+  --paper:#FDFDFC; --paper-2:#E6E6E3; --paper-text:#1C1D1F; --paper-muted:#5F6267; --paper-foot:#F7F7F5;
+  --stack-1:#E9E9E6; --stack-2:#D6D6D2;
+  --accent:#C9A36A; --accent-line:#C9A36A; --accent-ink:#7E6130; --hl:#EEDDBF; --glow:201,163,106;
+  --ink-btn:#EDEDEA; --ink-btn-hover:#FFFFFF; --on-ink:#0B0B0C;
+  --shadow:0,0,0;
+  --ok:#1C7550; --no:#A83A1E;
+  --sans:"Geist",ui-sans-serif,system-ui,-apple-system,sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --serif:"Source Serif 4",Georgia,serif;
+  --r:6px; --r-paper:4px; --nav:64px;
+  --ease:cubic-bezier(.16,1,.3,1);
+  color-scheme:dark;
+}
+:root[data-theme="light"]{
+  --bg:#F3F3F1; --bg-2:#EAEAE7; --bg-3:#DEDEDA; --line:rgba(28,29,31,.12); --line-2:rgba(28,29,31,.28);
+  --text:#1C1D1F; --muted:#5F6267; --nav-bg:rgba(243,243,241,.86);
+  --stack-1:#E9E9E6; --stack-2:#DEDEDA;
+  --accent:#B8441D; --accent-line:#D9572B; --accent-ink:#B8441D; --hl:#F7D2C1; --glow:217,87,43;
+  --ink-btn:#1C1D1F; --ink-btn-hover:#36383C; --on-ink:#FBFBFA;
+  --shadow:28,29,31;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--nav) + 16px)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{margin:0;background:var(--bg);color:var(--text);font:400 17px/1.6 var(--sans);
+     -webkit-font-smoothing:antialiased;overflow-x:clip}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+::selection{background:var(--hl)}
+.skip{position:absolute;left:16px;top:-80px;z-index:100;background:var(--ink-btn);color:var(--on-ink);
+      padding:12px 16px;border-radius:var(--r);font-weight:500;text-decoration:none}
+.skip:focus{top:12px}
+.wrap{max-width:1200px;margin:0 auto;padding-inline:clamp(16px,4vw,40px)}
 
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.47059;-webkit-font-smoothing:antialiased}
-  h1,h2,h3{font-family:var(--font);font-weight:600;letter-spacing:-0.015em;margin:0;text-wrap:balance}
-  a{color:var(--accent);text-decoration:none}
-  a:hover{text-decoration:underline}
-  .wrap{max-width:1040px;margin:0 auto;padding-inline:22px}
-  @media (max-width:640px){.wrap{padding-inline:18px}}
-  .eyebrow{font-size:.78rem;letter-spacing:.02em;color:var(--ink-dim);font-weight:600}
-  code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.92em;background:var(--bg-alt);padding:.15em .4em;border-radius:5px}
-  .rule{height:1px;background:var(--line);border:0;margin:0}
-  section{padding-block:84px}
-  @media (max-width:640px){section{padding-block:54px}}
-  .bg-alt{background:var(--bg-alt)}
-  .section-head{margin-bottom:40px;max-width:680px;margin-inline:auto;text-align:center}
-  .section-head h2{font-size:clamp(1.7rem,3.6vw,2.5rem)}
-  .section-head p{color:var(--ink-dim);margin:14px 0 0;font-size:1.08rem}
-  .chevron::after{content:" \203A";font-weight:600}
+/* nav */
+.nav{position:sticky;top:0;z-index:30;height:var(--nav);border-bottom:1px solid var(--line);
+     background:var(--nav-bg);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.nav .wrap{height:100%;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
+.nav-left{font-size:14px;justify-self:start}
+.nav-left a{text-decoration:none;color:var(--muted);transition:color .2s}
+.nav-left a:hover{color:var(--text)}
+.wordmark{justify-self:center;font-weight:500;font-size:15px;letter-spacing:.32em;text-transform:uppercase;
+          text-decoration:none;white-space:nowrap;padding-left:.32em}
+.wordmark span{color:var(--muted);font-weight:400}
+.nav-links{justify-self:end;display:flex;align-items:center;gap:28px;font-size:15px}
+.nav-links a:not(.btn){text-decoration:none;color:var(--muted);transition:color .2s}
+.nav-links a:not(.btn):hover{color:var(--text)}
+@media (max-width:640px){
+  .nav .wrap{grid-template-columns:auto 1fr;gap:12px}
+  .nav-left{display:none}
+  .wordmark{justify-self:start;letter-spacing:.24em;font-size:14px;padding-left:0}
+}
+/* phones: the hero's own button (same label) is right below, so the nav keeps just the wordmark */
+@media (max-width:480px){.nav-links .btn{display:none}}
 
-  @media (prefers-reduced-motion: no-preference){
-    .hero h1,.hero p.lede,.hero .cta-row{animation:rise .7s cubic-bezier(.16,1,.3,1) both}
-    .hero p.lede{animation-delay:.08s}
-    .hero .cta-row{animation-delay:.16s}
-    @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-  }
+/* buttons: 6px radius everywhere interactive; paper sheets are 4px */
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;
+     border-radius:var(--r);border:1px solid transparent;font:500 13px/1 var(--sans);letter-spacing:.14em;
+     text-transform:uppercase;text-decoration:none;
+     white-space:nowrap;cursor:pointer;touch-action:manipulation;
+     transition:transform .2s var(--ease),background-color .2s,border-color .2s,color .2s}
+.btn:active{transform:scale(.98)}
+.btn-primary{background:var(--ink-btn);color:var(--on-ink)}
+.btn-primary:hover{background:var(--ink-btn-hover)}
+.btn-quiet{border-color:var(--line-2);color:var(--text);background:transparent}
+.btn-quiet:hover{border-color:var(--text)}
+.btn-sm{min-height:40px;padding:0 16px;font-size:12px}
+.btn[disabled]{opacity:.5;cursor:progress}
 
-  header.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb, var(--bg) 82%, transparent);
-             backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding-block:13px}
-  .brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.98rem}
-  .brand .dot{width:8px;height:8px;border-radius:2px;background:var(--accent-strong);transform:rotate(45deg)}
-  .nav-links{display:flex;gap:28px;font-size:.84rem}
-  .nav-links a{color:var(--ink)}
-  .nav-links a:hover{color:var(--ink-dim);text-decoration:none}
+/* headline word reveal (JS wraps words) */
+.w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}
+.w>span{display:inline-block}
 
-  .hero{padding-block:96px 56px;text-align:center;position:relative;overflow:clip}
-  .hero::before{content:"";position:absolute;inset:0;background:var(--glow);z-index:-1;pointer-events:none}
-  .hero .wrap{max-width:780px}
-  .hero h1{font-size:clamp(2.3rem,6vw,3.6rem);line-height:1.08;font-weight:700}
-  .hero h1 .grad{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));
-                  -webkit-background-clip:text;background-clip:text;color:transparent}
-  .hero p.lede{font-size:1.22rem;color:var(--ink-dim);margin:18px auto 0;max-width:600px}
-  .cta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:30px;align-items:center;justify-content:center}
-  .btn-solid{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));color:var(--accent-ink);
-             border:1px solid transparent;border-radius:var(--radius-pill);
-             padding:12px 24px;font-size:.98rem;font-weight:500;box-shadow:0 8px 24px -10px color-mix(in srgb, var(--accent-strong) 55%, transparent)}
-  .btn-solid:hover{text-decoration:none;opacity:.9}
-  .cta-row > a.chevron{font-size:1rem;font-weight:500;padding-top:12px}
+/* paper sheet: the one object the whole site is built around */
+.sheet-stack{position:relative;width:100%;height:100%}
+.sheet-stack::before,.sheet-stack::after{content:"";position:absolute;inset:0;border-radius:var(--r-paper);
+     background:var(--stack-1);box-shadow:0 20px 50px -28px rgba(var(--shadow),.5)}
+.sheet-stack::before{transform:rotate(2.2deg) translate(10px,6px);background:var(--stack-2)}
+.sheet-stack::after{transform:rotate(.9deg) translate(4px,3px)}
+.sheet{position:relative;z-index:1;width:100%;height:100%;background:var(--paper);color:var(--paper-text);
+       border-radius:var(--r-paper);overflow:hidden;display:grid;grid-template-rows:auto 1fr auto;
+       transform:rotate(-.6deg);
+       box-shadow:0 0 0 1px rgba(var(--shadow),.06),0 40px 90px -40px rgba(var(--shadow),.45),0 10px 24px -14px rgba(var(--shadow),.25)}
+.sheet-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:16px 24px;
+            border-bottom:1px solid var(--paper-2);font:500 13px/1.3 var(--sans);color:var(--paper-muted)}
+.sheet-head b{color:var(--paper-text);font-weight:600}
+.sheet-head .num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.sheet-body{position:relative;overflow:hidden}
+.doc{padding:22px 24px 0}
+.doc p{font:400 15px/1.62 var(--serif);margin:0 0 12px;color:var(--paper-text)}
+mark.hl{color:inherit;padding:0 1px;border-radius:2px;
+        background:linear-gradient(var(--hl),var(--hl)) no-repeat 0 85%/100% 80%}
+.scan{position:absolute;left:0;right:0;top:0;height:2px;background:var(--accent-line);opacity:0;pointer-events:none}
+.scan::before{content:"";position:absolute;left:0;right:0;bottom:2px;height:64px;
+              background:linear-gradient(to top,rgba(var(--glow),.2),rgba(var(--glow),0))}
+.finds{position:absolute;inset:16px 16px auto 16px}
+.finds-head{display:flex;justify-content:space-between;font:600 13px/1 var(--sans);color:var(--paper-muted);margin:2px 4px 10px}
+.finds-head .num{color:var(--paper-text)}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:9px 12px;margin-bottom:6px;
+     background:#fff;border:1px solid var(--paper-2);border-radius:var(--r-paper);font:500 14px/1.3 var(--sans)}
+.row .v{font-weight:600;white-space:nowrap}
+.row .v.ok{color:var(--ok)} .row .v.no{color:var(--no)} .row .v.mid{color:var(--paper-muted)}
+.row .v.cite{font:500 12.5px/1.3 var(--mono);color:var(--paper-muted)}
+.sheet-foot{border-top:1px solid var(--paper-2);padding:14px 24px 18px;background:var(--paper-foot)}
+.call{display:grid;grid-template-columns:repeat(3,auto);justify-content:space-between;gap:12px}
+.call div{font:500 12.5px/1.3 var(--sans);color:var(--paper-muted)}
+.call strong{display:block;margin-top:4px;font:600 20px/1.1 var(--sans);color:var(--paper-text);letter-spacing:-.01em}
+.call .mono{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500}
+.grade{margin-top:12px;padding-top:12px;border-top:1px dashed #CFCFCA;display:flex;gap:10px;align-items:baseline;
+       font:500 13.5px/1.4 var(--sans);color:var(--paper-text)}
+.grade b{color:var(--ok);font-weight:600;white-space:nowrap}
+.grade span{min-width:0}
+.stamp{position:absolute;right:28px;bottom:28px;z-index:3;padding:10px 14px 9px;border:2.5px solid var(--accent-ink);
+       outline:1px solid var(--accent-ink);outline-offset:3px;border-radius:3px;color:var(--accent-ink);transform:rotate(-8deg);
+       background:rgba(253,253,252,.88);text-align:center;mix-blend-mode:multiply}
+.stamp strong{display:block;font:600 20px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.stamp span{display:block;margin-top:5px;font:500 11.5px/1.35 var(--mono);font-variant-numeric:tabular-nums}
+.example-note{position:absolute;left:24px;bottom:-30px;font-size:13px;color:var(--muted)}
 
-  .track-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  @media (max-width:900px){.track-grid{grid-template-columns:1fr}}
-  .track{border-radius:var(--radius);padding:30px 26px;background:var(--surface);border:1px solid var(--line);
-         position:relative;overflow:clip;transition:transform .25s ease,box-shadow .25s ease}
-  .track::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
-                  background:linear-gradient(90deg,var(--accent-strong),var(--accent2))}
-  .track:hover{transform:translateY(-3px);box-shadow:0 16px 32px -18px color-mix(in srgb, var(--ink) 25%, transparent)}
-  .bg-alt .track{background:var(--bg)}
-  .track .icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-               font-size:1.2rem;margin-bottom:16px;background:var(--accent-soft);color:var(--accent-strong)}
-  .track.featured .icon{background:linear-gradient(135deg,var(--accent-soft),var(--accent2-soft));color:var(--accent2)}
-  .track .status{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;letter-spacing:.02em;
-                  border-radius:999px;padding:5px 12px;margin-bottom:16px}
-  .track.proven .status{color:var(--good);background:var(--good-soft)}
-  .track.early .status{color:var(--accent-strong);background:var(--accent-soft)}
-  .track h3{font-size:1.18rem;font-weight:600}
-  .track p{color:var(--ink-dim);margin:12px 0 0;font-size:.95rem}
-  .track ul{margin:16px 0 0;padding-left:20px;color:var(--ink-dim);font-size:.92rem}
-  .track li{margin-top:7px}
+/* footer */
+.site-foot{border-top:1px solid var(--line);padding:40px 0 56px}
+.site-foot .wrap{display:grid;grid-template-columns:200px minmax(0,1fr);gap:24px}
+.site-foot p{margin:0;max-width:70ch;color:var(--muted);font-size:14.5px;line-height:1.6}
+.foot-mark{justify-self:start;padding-left:0;font-size:13px}
+.theme-toggle{grid-column:2;justify-self:start;margin-top:4px;padding:8px 0;border:0;background:none;color:var(--muted);
+              font:500 12px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+              border-bottom:1px solid var(--line-2)}
+.theme-toggle:hover{color:var(--text)}
+@media (max-width:640px){.theme-toggle{grid-column:1}}
+@media (max-width:640px){.site-foot .wrap{grid-template-columns:1fr}}
 
-  .layer-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
-  @media (max-width:760px){.layer-grid{grid-template-columns:1fr}}
-  .layer{border-radius:var(--radius);padding:28px;background:var(--surface);border:1px solid var(--line);
-         border-left:3px solid var(--accent-strong)}
-  .layer:nth-child(2){border-left-color:var(--accent2)}
-  .bg-alt .layer{background:var(--bg)}
-  .layer .tag{font-size:.76rem;font-weight:600;color:var(--ink-faint)}
-  .layer h3{font-size:1.12rem;margin-top:8px;font-weight:600}
-  .layer p{color:var(--ink-dim);margin:10px 0 0;font-size:.94rem}
+/* story: hero + sticky sheet + steps share one grid */
+.story-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.04fr);column-gap:clamp(40px,6vw,96px)}
+.hero{grid-column:1;grid-row:1;min-height:calc(100dvh - var(--nav));display:flex;flex-direction:column;
+      justify-content:center;padding-block:48px 64px}
+.hero h1{font-weight:300;font-size:clamp(40px,4.4vw,66px);line-height:1;letter-spacing:-.02em;margin:0;
+         max-width:14ch;text-transform:uppercase;text-wrap:balance}
+.lede{font-size:clamp(18px,1.45vw,20px);line-height:1.55;color:var(--muted);max-width:36ch;margin:28px 0 0}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:36px}
+.sheet-col{grid-column:2;grid-row:1/3}
+.sheet-stick{position:sticky;top:calc(var(--nav) + 5vh);height:calc(100dvh - var(--nav) - 12vh);
+             min-height:520px;max-height:760px}
+.steps{grid-column:1;grid-row:2;position:relative;padding-left:32px;padding-bottom:24vh}
+.rail{position:absolute;left:0;top:10vh;bottom:30vh;width:2px;background:var(--line)}
+.rail i{display:block;height:100%;background:var(--accent-line);transform-origin:top}
+.step{min-height:80dvh;display:flex;flex-direction:column;justify-content:center;max-width:470px;
+      transition:opacity .5s var(--ease)}
+.js-motion .step{opacity:.26}
+.js-motion .step.on{opacity:1}
+.verb{font:500 12px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin:0 0 18px}
+.step h2{font-weight:300;font-size:clamp(28px,2.7vw,40px);line-height:1.05;letter-spacing:-.015em;margin:0 0 18px;
+         text-transform:uppercase;text-wrap:balance}
+.step p{color:var(--muted);margin:0;max-width:44ch}
+.step p+p{margin-top:12px}
+.step ul{margin:6px 0 0;padding:0;list-style:none;color:var(--muted);max-width:46ch}
+.step li{padding:7px 0 7px 18px;position:relative}
+.step li::before{content:"";position:absolute;left:0;top:18px;width:8px;height:2px;background:var(--line-2)}
 
-  .stat-grid{display:flex;align-items:stretch;gap:20px;justify-content:center;flex-wrap:wrap}
-  .stat{flex:1;min-width:240px;max-width:340px;text-align:center;padding:30px 24px;border-radius:var(--radius);
-        background:var(--surface);border:1px solid var(--line)}
-  .stat-label{font-size:.78rem;font-weight:600;letter-spacing:.02em;color:var(--ink-faint)}
-  .stat-num{font-family:var(--font);font-size:clamp(2rem,5.5vw,2.9rem);font-weight:700;letter-spacing:-0.02em;margin:8px 0 10px;color:var(--ink-dim)}
-  .stat.hl{background:linear-gradient(165deg,color-mix(in srgb, var(--accent-strong) 10%, var(--surface)),var(--surface));
-           border-color:color-mix(in srgb, var(--accent-strong) 35%, var(--line))}
-  .stat.hl .stat-num{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));
-                      -webkit-background-clip:text;background-clip:text;color:transparent}
-  .stat p{color:var(--ink-dim);font-size:.92rem;margin:0}
-  .stat-arrow{font-size:1.8rem;color:var(--accent2);font-weight:300;align-self:center}
-  @media (max-width:640px){.stat-arrow{transform:rotate(90deg)}}
+/* sections after the story */
+.section{padding-block:clamp(96px,12vw,168px);border-top:1px solid var(--line)}
+.section h2{font-weight:300;font-size:clamp(32px,3.6vw,54px);line-height:1.02;letter-spacing:-.02em;margin:0;max-width:18ch;
+            text-transform:uppercase;text-wrap:balance}
+.section .sub{color:var(--muted);max-width:52ch;margin:20px 0 0;font-size:18px}
 
-  .incidents{display:flex;flex-direction:column;gap:16px}
-  .incident{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 28px 26px;
-            border-top:3px solid var(--accent2)}
-  .bg-alt .incident{background:var(--bg)}
-  .incident-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-  .incident-no{font-size:.78rem;color:var(--ink-faint)}
-  .stamp{font-size:.72rem;font-weight:600;color:var(--good);background:var(--good-soft);border-radius:999px;padding:5px 12px}
-  .incident h3{font-size:1.14rem;font-weight:600;margin-top:10px}
-  .incident p{color:var(--ink-dim);margin:10px 0 0;max-width:700px;font-size:.96rem}
-  .metric-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-  .metric{font-size:.84rem;background:var(--bg-alt);border-radius:8px;padding:7px 12px}
-  .bg-alt .metric{background:var(--surface);border:1px solid var(--line)}
-  .metric b{color:var(--good);font-weight:600}
+/* tools (Firms): one feature tile + two stacked */
+.tools{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;margin-top:56px}
+.tool{border:1px solid var(--line);border-radius:var(--r);padding:32px;background:transparent}
+.tool h3{margin:0 0 10px;font-size:22px;letter-spacing:-.015em;font-weight:500}
+.tool p{margin:0;color:var(--muted);max-width:46ch}
+.tool.feature{grid-row:1/3;background:var(--paper);color:var(--paper-text);border-color:transparent;border-radius:var(--r-paper);
+              box-shadow:0 0 0 1px rgba(var(--shadow),.06),0 30px 70px -40px rgba(var(--shadow),.4)}
+.tool.feature p{color:var(--paper-muted)}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:28px 0 0;padding:0;list-style:none}
+.checks li{font:500 15px/1.35 var(--sans);padding-top:10px;border-top:1px solid var(--paper-2)}
+@media (max-width:900px){.tools{grid-template-columns:1fr}.tool.feature{grid-row:auto}}
+@media (max-width:520px){.checks{grid-template-columns:1fr}}
 
-  .flow{display:flex;flex-direction:column;gap:20px;max-width:680px;margin-inline:auto}
-  .flow-step{display:flex;gap:18px;align-items:flex-start;text-align:left}
-  .flow-n{font-weight:600;color:var(--accent-strong);font-size:.92rem;min-width:28px}
-  .flow-step p{margin:0;color:var(--ink-dim)}
-  .flow-step strong{color:var(--ink)}
+/* working together: a real five-part sequence, laid out as a horizontal track */
+.flow{list-style:none;margin:64px 0 0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:28px}
+.flow li{border-top:1px solid var(--accent-line);padding-top:24px}
+.flow h3{margin:0 0 10px;font-size:18px;letter-spacing:-.01em;font-weight:500}
+.flow p{margin:0;color:var(--muted);font-size:15.5px;line-height:1.55}
+@media (max-width:1000px){
+  .flow{grid-template-columns:1fr 1fr;gap:36px 28px}
+}
 
-  .boundary-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media (max-width:760px){.boundary-grid{grid-template-columns:1fr}}
-  .boundary{border-radius:var(--radius);padding:26px;border:1px solid var(--line)}
-  .boundary .fn{font-weight:600;font-size:.92rem}
-  .boundary.is .fn{color:var(--good)}
-  .boundary.isnt .fn{color:var(--bad)}
-  .boundary ul{margin:12px 0 0;padding-left:18px;color:var(--ink-dim);font-size:.92rem;text-align:left}
-  .boundary li{margin-top:6px}
+@media (max-width:560px){.flow{grid-template-columns:1fr}}
 
-  .engage-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media (max-width:760px){.engage-grid{grid-template-columns:1fr}}
-  .engage{border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--surface);text-align:left}
-  .bg-alt .engage{background:var(--bg)}
-  .engage.featured{border-color:var(--accent-strong)}
-  .engage .fn{font-weight:600;font-size:1.06rem}
-  .engage .price{color:var(--accent-strong);font-weight:500;margin-top:4px;font-size:.96rem}
-  .engage p{color:var(--ink-dim);margin:12px 0 0;font-size:.94rem}
+/* boundaries */
+.bounds{display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,6vw,96px);margin-top:56px}
+.bounds h3{margin:0 0 20px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:500}
+.bounds .isnt h3{color:var(--muted)}
+.bounds ul{margin:0;padding:0;list-style:none}
+.bounds li{padding:14px 0;border-top:1px solid var(--line);color:var(--text)}
+.bounds .isnt li{color:var(--muted)}
+@media (max-width:760px){.bounds{grid-template-columns:1fr}}
 
-  .install-box{display:flex;align-items:center;gap:10px;background:var(--bg-alt);color:var(--ink);border-radius:999px;
-               padding:10px 8px 10px 20px;font-size:.92rem;border:1px solid var(--line)}
-  .copy-btn{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;
-            font-size:.78rem;padding:7px 14px;cursor:pointer;white-space:nowrap}
-  .copy-btn:hover{border-color:var(--accent-strong)}
+/* engage */
+.engage h2{font-size:clamp(44px,7vw,108px);line-height:.98;letter-spacing:-.025em;max-width:13ch}
+.engage-row{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:40px}
+.mailbox{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line-2);border-radius:var(--r);padding:4px 4px 4px 16px}
+.mailbox code{font:500 15px/1 var(--mono);color:var(--text)}
+.copy-btn{min-height:40px;padding:0 14px;border:0;border-radius:4px;background:var(--bg-2);color:var(--text);
+          font:500 14px/1 var(--sans);cursor:pointer}
+.copy-btn:hover{background:var(--bg-3)}
 
-  .submit-box{max-width:640px;margin-top:40px;padding:32px;border-radius:var(--radius);
-              border:1px solid var(--line);background:var(--surface)}
-  .submit-box h3{font-size:1.1rem;font-weight:600;margin-bottom:20px}
-  .field{margin-bottom:18px}
-  .field label{display:block;font-size:.84rem;font-weight:600;margin-bottom:7px}
-  .field label .opt{color:var(--ink-faint);font-weight:500}
-  .submit-box input,.submit-box select,.submit-box textarea{
-    width:100%;font:inherit;font-size:.96rem;padding:12px 14px;border-radius:12px;
-    border:1px solid var(--line);background:var(--bg);color:var(--ink);
-  }
-  .submit-box textarea{resize:vertical;min-height:90px;font-family:ui-monospace,'SF Mono',Menlo,monospace}
-  .submit-box input:focus,.submit-box select:focus,.submit-box textarea:focus{outline:2px solid var(--accent-strong);outline-offset:1px}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media (max-width:560px){.row2{grid-template-columns:1fr}}
-  .hint{font-size:.82rem;color:var(--ink-faint);margin-top:6px}
-  .submit-box .btn-solid{width:100%;border:0;cursor:pointer}
-  .err{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--bad-soft);
-       color:var(--bad);font-size:.88rem}
-  .sent{display:none;text-align:center;padding:24px 0}
-  .sent .check{width:52px;height:52px;border-radius:50%;background:var(--good-soft);color:var(--good);
-               display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 16px}
-  .sent h3{font-size:1.1rem}
-  .sent p{color:var(--ink-dim);margin:8px auto 0;max-width:400px;font-size:.92rem}
-
-  footer{border-top:1px solid var(--line);padding-block:30px;color:var(--ink-faint);font-size:.82rem;text-align:center}
-  footer .disclaimer{max-width:680px;margin:14px auto 0;font-size:.8rem;line-height:1.6}
+/* phones: hero, then the sheet pins under the nav while the steps scroll below it */
+@media (max-width:900px){
+  .story-grid{display:block}
+  .hero{min-height:auto;padding-block:56px 40px}
+  .hero h1{max-width:none}
+  .sheet-col{display:contents}
+  .sheet-stick{top:var(--nav);z-index:5;height:min(60dvh,560px);min-height:0;padding:10px 12px 14px 0;background:var(--bg)}
+  .steps{padding-left:22px;padding-bottom:12vh}
+  .rail{top:0;bottom:12vh}
+  .step{min-height:64dvh;justify-content:flex-start;padding-top:6dvh}
+  .doc{padding:14px 16px 0}
+  .doc p{font-size:12.5px;line-height:1.5;margin-bottom:8px}
+  .sheet-head{padding:11px 16px;font-size:12px}
+  .finds{inset:10px 10px auto 10px}
+  .finds-head{margin-bottom:6px;font-size:12px}
+  .row{padding:5px 9px;margin-bottom:4px;font-size:12px}
+  .row .v.cite{font-size:11px}
+  .sheet-foot{padding:10px 16px 12px}
+  .call strong{font-size:16px}
+  .call div{font-size:11.5px}
+  .grade{margin-top:8px;padding-top:8px;font-size:12px}
+  .row{margin-bottom:3px}
+  .stamp{bottom:10px;right:12px;padding:5px 9px 4px;outline-offset:2px}
+  .stamp strong{font-size:14px}
+  .stamp span{display:none}
+  .example-note{display:none}
+}
 </style>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.css"
-      integrity="sha384-gvLq/iOMNnPchdosgVym5huSVkKipHCQaqSw2Eg0V52Mzmlf169ZOsXcNc2cNu8x" crossorigin="anonymous">
 </head>
 <body>
-
+<a class="skip" href="#main">Skip to content</a>
 <header class="nav">
-  <div class="wrap nav-inner">
-    <div class="brand"><span class="dot"></span> null / firms</div>
-    <nav class="nav-links">
-      <a href="#capabilities">Capabilities</a>
-      <a href="#engage">Engage</a>
-    </nav>
+  <div class="wrap">
+    <div class="nav-left"><a href="#how">How it works</a></div>
+    <a class="wordmark" href="pitch.html">Null <span>/ firms</span></a>
+    <nav class="nav-links" aria-label="Primary"><a class="btn btn-primary btn-sm" href="intake.html">Expedite your research</a></nav>
   </div>
 </header>
-
-<section class="hero">
-  <div class="wrap">
-    <p class="eyebrow">An expedited research tool for investment firms</p>
-    <h1>Give your analysts back <span class="grad">their time</span></h1>
-    <p class="lede">This is a research tool for the names already on your watchlist. It reads news, SEC
-      filings, and analyst coverage, and returns a dated, sourced report in minutes instead of hours.
-      Every call is logged and checked against what actually happened.</p>
-    <div class="cta-row">
-      <a class="btn-solid" href="intake.html">Expedite your research</a>
-      <a class="chevron" href="#how">See how this works</a>
+<main id="main">
+<section class="story" aria-label="How a request is handled">
+  <div class="wrap story-grid">
+    <div class="hero">
+      <h1>Give your analysts back their time</h1>
+      <p class="lede">It reads the news and SEC filings on your watchlist and writes a sourced research read. No buy or sell calls.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="intake.html">Expedite your research</a>
+        <a class="btn btn-quiet" href="#how">See how it works</a>
+      </div>
+    </div>
+    <div class="sheet-col">
+      <div class="sheet-stick">
+        <div class="sheet-stack">
+          <figure class="sheet" aria-label="Example of a request being read, checked, logged and graded" style="margin:0">
+            <div class="sheet-head"><span><b>Form 10-Q</b> excerpt, page <span class="num">31</span></span><span>Example</span></div>
+            <div class="sheet-body">
+              <div class="doc-layer"><div class="doc">
+<p>Revenue for the quarter increased 18% compared with the prior-year period, driven primarily by <mark class="hl">higher unit volume in the core segment</mark>. Gross margin was 41.2%, compared with 38.7% a year earlier.</p>
+<p>During the quarter, <mark class="hl">two directors purchased an aggregate of 120,000 shares</mark> in open-market transactions. No officer sold shares during the period.</p>
+<p>The Company expects to submit its response to the agency's information request in the fourth quarter. <mark class="hl">Management cannot predict the timing or outcome of the review.</mark></p>
+              </div></div>
+              <div class="scan" aria-hidden="true"></div>
+              <div class="finds">
+                <div class="finds-head"><span>Seven checks</span><span class="num">5 of 7 show possible underpricing</span></div>
+<div class="row"><span>Analyst target gap</span><span class="v ok">22% below target</span></div>
+<div class="row"><span>Revision direction</span><span class="v ok">3 raised</span></div>
+<div class="row"><span>Insider activity</span><span class="v ok">2 directors bought</span></div>
+<div class="row"><span>Disclosure vs. price</span><span class="v mid">Unclear</span></div>
+<div class="row"><span>Multi-week accumulation</span><span class="v ok">2 upgrades</span></div>
+<div class="row"><span>Fundamentals trend</span><span class="v ok">Revenue up 18%</span></div>
+<div class="row"><span>Counter-evidence</span><span class="v no">Agency review pending</span></div>
+              </div>
+              <div class="stamp"><strong>Logged</strong><span>13 Oct 2026, 09:41<br>14 sources</span></div>
+            </div>
+            <div class="sheet-foot">
+              <div class="call"><div>Underpricing checks<strong class="mono">5 of 7</strong></div><div>Sources<strong class="mono" id="conf">14</strong></div><div>Primary filings<strong class="mono">3</strong></div></div>
+              <div class="grade"><b>Sources checked.</b><span>Primary filing read, the other side looked for, every source dated.</span></div>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </div>
+    <div class="steps">
+      <div class="rail" aria-hidden="true"><i></i></div>
+<article class="step" id="how">
+  <p class="verb">Read</p>
+  <h2>It reads what an analyst would</h2>
+  <p>The last ten days of news and analyst coverage, plus the company's actual 10-K, 10-Q or 8-K. An hour or two of reading becomes a couple of minutes.</p>
+</article>
+<article class="step">
+  <p class="verb">Check</p>
+  <h2>Seven checks, each one verifiable</h2>
+  <p>Analyst target gap, revisions, insider activity, a dated disclosure against the price, multi-week accumulation, the fundamentals trend, and an active search for counter-evidence. It reports how many show signs of possible underpricing, as information, never as a recommendation.</p>
+</article>
+<article class="step">
+  <p class="verb">Write</p>
+  <h2>One written read, with its sources</h2>
+  <p>What happened, what it means, what cuts against it, and every source it used. No buy or sell call. The reading and writing is the only part done by AI.</p>
+</article>
+<article class="step">
+  <p class="verb">Log</p>
+  <h2>Every source is logged</h2>
+  <p>The read and the exact sources behind it, each one dated and labeled: the filing itself, a company release, an analyst note, or news coverage.</p>
+</article>
+<article class="step">
+  <p class="verb">Check sources</p>
+  <h2>Then it checks its own sources</h2>
+  <p>Did it read the primary filing, were the sources recent and independent, did it look for the other side. Those are plain, repeatable rules.</p><p>Repeated misses become lessons it follows on the next read.</p>
+</article>
     </div>
   </div>
 </section>
-
-<section id="selfgrading" class="bg-alt">
+<section class="section" id="tools" aria-labelledby="tools-h">
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">How accuracy is tracked</p>
-      <h2>Every call is logged and checked against what actually happened</h2>
-      <p>Each call is logged: the read, the confidence, and the price at the time. It's checked later
-        against the real outcome, using public market data.</p>
-    </div>
-    <div class="layer-grid">
-      <div class="layer">
-        <div class="tag">Self-grading</div>
-        <h3>A real, checkable track record</h3>
-        <p>Every call is scored against what actually happened, split out by stated confidence, building
-          a real record of accuracy you can audit yourself over time.</p>
-      </div>
-      <div class="layer">
-        <div class="tag">Calibration audit</div>
-        <h3>Finding its own blind spots</h3>
-        <p>Once there's enough graded history, Claude reviews its own track record for patterns. Each
-          finding is descriptive, citing its real sample size.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="capacity">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">What this actually changes</p>
-      <h2>The reading used to be the bottleneck. Now it isn't.</h2>
-      <p>This extends your team rather than replacing it. The same people can cover five names in the
-        time it used to take to read one. The slow part no longer eats the day.</p>
-    </div>
-    <div class="stat-grid">
-      <div class="stat">
-        <div class="stat-label">The old way</div>
-        <div class="stat-num">An hour or two</div>
-        <p>per filing or per name, read and briefed by hand</p>
-      </div>
-      <div class="stat-arrow">→</div>
-      <div class="stat hl">
-        <div class="stat-label">What changes</div>
-        <div class="stat-num">A couple of minutes</div>
-        <p>for the first pass. A person reviews it and decides from there</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="capabilities" class="bg-alt">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">Three tools, one set of checks</p>
-      <h2>These help you research</h2>
-      <p>All three are logged and checked against what actually happened, with the same checks built into
-        every one.</p>
-    </div>
-    <div class="track-grid">
-      <article class="track featured">
-        <span class="icon">◆</span>
+    <h2 id="tools-h">Three tools, one set of checks</h2>
+    <p class="sub">Every read from every tool is logged, and its sources checked the same way.</p>
+    <div class="tools">
+      <article class="tool feature">
         <h3>Underpriced-setup screening</h3>
-        <p>Applies seven independently-checkable criteria, including analyst target gap, insider activity,
-          and an active search for the strongest case against the read.</p>
-        <ul>
-          <li>Every claim comes with a real number and a citation</li>
-          <li>Confidence reflects how much of the evidence actually agrees</li>
+        <p>Seven independent checks per name, each with a real number and a citation. It reports how many show signs of possible underpricing, as information, never as a recommendation.</p>
+        <ul class="checks">
+          <li>Analyst target gap</li><li>Revision direction</li><li>Insider activity</li><li>Dated disclosure vs. price</li>
+          <li>Multi-week accumulation</li><li>Fundamentals trend</li><li>Counter-evidence</li>
         </ul>
       </article>
-      <article class="track">
-        <span class="icon">◇</span>
-        <h3>Market &amp; news reading</h3>
-        <p>Reads the last ten days of news on a name and explains what changed and whether the price has
-          already caught up to it.</p>
-        <ul>
-          <li>Every source is cited and logged for later review</li>
-        </ul>
+      <article class="tool">
+        <h3>News reading</h3>
+        <p>Reads the last ten days of news on a name and explains what changed, and whether the price has already caught up to it.</p>
       </article>
-      <article class="track">
-        <span class="icon">▢</span>
+      <article class="tool">
         <h3>SEC filing reading</h3>
-        <p>Reads a company's actual 10-K, 10-Q, or 8-K and flags what changed since the last filing.</p>
-        <ul>
-          <li>Reads the primary document itself, every time</li>
-        </ul>
+        <p>Reads the actual 10-K, 10-Q or 8-K and flags what changed since the last one. The primary document, every time.</p>
       </article>
     </div>
   </div>
 </section>
-
-<section id="mechanism">
+<section class="section" aria-labelledby="work-h">
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">How the AI part actually works</p>
-      <h2>Two layers. Only one of them is AI.</h2>
-      <p>The AI does the reading and writing. The checking is just math.</p>
-    </div>
-    <div class="layer-grid">
-      <div class="layer">
-        <div class="tag">Layer 1: Checking</div>
-        <h3>Plain math</h3>
-        <p>Scores every past read against the real price move that followed, using free market data,
-          split out by stated confidence. Same input, same answer, every time.</p>
-      </div>
-      <div class="layer">
-        <div class="tag">Layer 2: Research</div>
-        <h3>Where the AI actually works</h3>
-        <p>Claude reads the filings and the news, searches systematically, and turns what it finds into a
-          structured read: a sentiment, a confidence level, and the sources used. It's fast, and checked
-          by the layer above every time.</p>
-      </div>
+    <h2 id="work-h">Your data never leaves your systems</h2>
+    <ol class="flow">
+<li><h3>We scope it</h3><p>A short call sets exactly what gets covered: a watchlist, a set of filings, one real question. Agreed before anything starts.</p></li>
+<li><h3>It runs on your side</h3><p>Against your own data feeds, on your systems or a private environment you control. Your research stays yours.</p></li>
+<li><h3>You get a written report</h3><p>What it found, what cuts against it, and every source it read. No buy or sell call. One section is left blank for your own judgment.</p></li>
+<li><h3>NDA first, always</h3><p>Signed before we see anything specific about your watchlist or your names. No exceptions.</p></li>
+<li><h3>You decide what's next</h3><p>Act on it, ignore it, or come back with a follow-up. The report is yours either way, with no obligation to continue.</p></li>
+    </ol>
+  </div>
+</section>
+<section class="section" aria-labelledby="bounds-h">
+  <div class="wrap">
+    <h2 id="bounds-h">What this is, and what it isn't</h2>
+    <div class="bounds">
+      <div class="is"><h3>This is</h3><ul><li>Faster research, plus the checks that keep it honest</li><li>A way to cover five names in the time it used to take to read one</li><li>Seven independently checkable facts per name, every one sourced</li><li>A method tested on our own work, mistakes included</li><li>An early partnership. The first clients help shape what this becomes, with direct access to the person building it</li></ul></div>
+      <div class="isnt"><h3>This isn't</h3><ul><li>Investment advice, or a buy or sell call on any name</li><li>Asset management. Your money and your trades stay yours</li><li>A pitch to cut your team. It's a pitch to get more out of it</li><li>A one-time pass. Every read's sources are logged and checked, so it keeps getting better at where it looks</li></ul></div>
     </div>
   </div>
 </section>
-
-<section id="how">
+<section class="section engage" id="engage" aria-labelledby="engage-h">
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">How working together looks</p>
-      <h2>Your data never leaves your systems</h2>
-    </div>
-    <div class="flow">
-      <div class="flow-step"><span class="flow-n">01</span><p><strong>We scope it.</strong> A short call defines exactly what gets covered: a watchlist, a set of filings, one real question. All of it agreed before anything starts.</p></div>
-      <div class="flow-step"><span class="flow-n">02</span><p><strong>It runs on your side.</strong> Against your own data feeds, on your systems or a private environment you control. Your research stays yours.</p></div>
-      <div class="flow-step"><span class="flow-n">03</span><p><strong>You get a written report.</strong> What it found, how confident it is, why, and the sources it read. A section is left blank on purpose for your own judgment before anything goes further.</p></div>
-      <div class="flow-step"><span class="flow-n">04</span><p><strong>NDA first, always.</strong> Signed before we see anything specific about your watchlist or your names, not after. Standard for every engagement, no exceptions.</p></div>
-      <div class="flow-step"><span class="flow-n">05</span><p><strong>You decide what's next.</strong> Act on it, ignore it, or come back with a follow-up question. The report is yours either way. There's no obligation to continue past what we scoped.</p></div>
+    <h2 id="engage-h">Expedite your research</h2>
+    <p class="sub">Send a watchlist. It goes straight to the person who runs the research.</p>
+    <div class="engage-row">
+      <a class="btn btn-primary" href="intake.html">Expedite your research</a>
+      <div class="mailbox"><code id="contact-email">grant02339@gmail.com</code>
+        <button class="copy-btn" type="button" onclick="copyEmail()" id="copy-email-btn">Copy</button></div>
     </div>
   </div>
 </section>
-
-<section id="boundaries" class="bg-alt">
-  <div class="wrap">
-    <div class="boundary-grid">
-      <div class="boundary is">
-        <div class="fn">This is</div>
-        <ul>
-          <li>Faster research, plus the checks that keep it honest</li>
-          <li>A way to cover five names in the time it used to take to read one</li>
-          <li>Seven independently-checkable claims per name, backed by a real, logged track record checked
-            against what actually happened</li>
-          <li>A method tested on our own work, mistakes included, as above</li>
-          <li>An early partnership. The first clients help shape what this becomes, with direct access to the
-            person building it instead of an account manager relaying your questions</li>
-        </ul>
-      </div>
-      <div class="boundary isnt">
-        <div class="fn">This isn't</div>
-        <ul>
-          <li>A guaranteed edge, or investment advice of any kind</li>
-          <li>Asset management. Your money and your trades stay yours</li>
-          <li>A pitch to cut your team. It's a pitch to get more out of it</li>
-          <li>A one-time test. Every call gets logged and checked against what actually happened, so the
-            track record keeps building the longer you use it</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="engage">
-  <div class="wrap">
-    <div class="submit-box">
-      <h3>Expedite your research</h3>
-      <a href="intake.html" class="btn-solid"
-         style="display:block;text-align:center;text-decoration:none;margin-top:18px">Submit a watchlist</a>
-    </div>
-
-    <div class="cta-row" style="margin-top:20px;justify-content:flex-start">
-      <div class="install-box">
-        <code id="contact-email">grant02339@gmail.com</code>
-        <button class="copy-btn" onclick="copyEmail()" id="copy-email-btn">Copy</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <div class="wrap">
-    <span>null / firms</span>
-    <p class="disclaimer">This isn't investment advice, a signal service, or asset management. It's
-      research help: faster search, plus the checks that keep it honest. Nothing here says any read
-      makes money.</p>
-  </div>
-</footer>
-
+</main>
+<footer class="site-foot">
+  <div class="wrap"><span class="wordmark foot-mark">Null <span>/ firms</span></span><p>This isn't investment advice, a signal service, or asset management. It's research help: faster search, every fact sourced, and no buy or sell calls. Nothing here says any read makes money.</p><button class="theme-toggle" type="button" id="theme-toggle">Light version</button>
 <script>
-function copyEmail(){
-  var text = document.getElementById('contact-email').textContent;
-  var btn = document.getElementById('copy-email-btn');
-  function done(ok){ btn.textContent = ok ? 'Copied' : 'Select + ⌘C'; setTimeout(function(){ btn.textContent='Copy'; }, 1400); }
-  try{ navigator.clipboard.writeText(text).then(function(){ done(true); }, function(){ done(false); }); }
-  catch(e){ done(false); }
-}
-</script>
-
+(function(){
+  var root=document.documentElement, btn=document.getElementById('theme-toggle');
+  function label(){btn.textContent=root.getAttribute('data-theme')==='light'?'Dark version':'Light version';}
+  label();
+  btn.addEventListener('click',function(){
+    var light=root.getAttribute('data-theme')!=='light';
+    if(light){root.setAttribute('data-theme','light');}else{root.removeAttribute('data-theme');}
+    try{localStorage.setItem('null-theme',light?'light':'dark');}catch(e){}
+    var m=document.querySelector('meta[name="theme-color"]'); if(m){m.content=light?'#F3F3F1':'#0B0B0C';}
+    label();
+  });
+})();
+</script></div>
+</footer>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"
         integrity="sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"
         integrity="sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"
         integrity="sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw" crossorigin="anonymous"></script>
+
 <script>
-// Guarded the same way the hero's own CSS entrance already is (prefers-reduced-motion) -- smooth
-// scrolling and scroll-triggered reveals are both motion effects some users turn off on purpose.
-if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  gsap.registerPlugin(ScrollTrigger);
-
-  var lenis = new Lenis();
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add(function(time){ lenis.raf(time * 1000); });
-  gsap.ticker.lagSmoothing(0);
-
-  // Hero already has its own CSS entrance animation -- excluded here so it isn't animated twice.
-  gsap.utils.toArray('section:not(.hero)').forEach(function(el){
-    gsap.from(el, {
-      opacity: 0,
-      y: 24,
-      duration: 0.7,
-      ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 85%' },
-    });
-  });
-}
+window.__story=function(seg,body){
+  // Staggered fromTo tweens only pre-render their first target, so set every start state up front.
+  gsap.set('.doc p',{opacity:.5}); gsap.set('mark.hl',{backgroundSize:'0% 80%'});
+  gsap.set('.finds',{autoAlpha:0}); gsap.set('.finds .row',{autoAlpha:0,y:10});
+  seg(0).fromTo('.scan',{autoAlpha:0,y:0},{autoAlpha:1,duration:.06})
+        .to('.scan',{y:function(){return body.clientHeight;},duration:1},'<')
+        .fromTo('.doc p',{opacity:.5},{opacity:1,duration:.3,stagger:.3},'<')
+        .to('.scan',{autoAlpha:0,duration:.08});
+  seg(1).fromTo('mark.hl',{backgroundSize:'0% 80%'},{backgroundSize:'100% 80%',duration:.35,stagger:.22})
+        .fromTo('.doc-layer',{opacity:1},{opacity:.05,duration:.3},'+=.1')
+        .fromTo('.finds',{autoAlpha:0},{autoAlpha:1,duration:.1},'<')
+        .fromTo('.finds .row',{autoAlpha:0,y:10},{autoAlpha:1,y:0,duration:.25,stagger:.12},'<');
+  var conf=document.getElementById('conf'), target=parseFloat(conf.textContent), o={v:0};
+  conf.textContent='0';
+  seg(2).fromTo('.call',{autoAlpha:0,y:26},{autoAlpha:1,y:0,duration:.6})
+        .to(o,{v:target,duration:.6,onUpdate:function(){conf.textContent=Math.round(o.v);}},'<.2');
+  seg(3).fromTo('.stamp',{autoAlpha:0,scale:1.7,rotate:-18},{autoAlpha:1,scale:1,rotate:-8,duration:1,ease:'back.out(2.2)'});
+  seg(4).fromTo('.grade',{clipPath:'inset(0 100% 0 0)'},{clipPath:'inset(0 0% 0 0)',duration:1});
+};
 </script>
 
+<script>
+function copyEmail(){
+  var text=document.getElementById('contact-email').textContent;
+  var btn=document.getElementById('copy-email-btn');
+  function done(ok){btn.textContent=ok?'Copied':'Select and copy';setTimeout(function(){btn.textContent='Copy';},1600);}
+  try{navigator.clipboard.writeText(text).then(function(){done(true);},function(){done(false);});}catch(e){done(false);}
+}
+(function(){
+  var root=document.documentElement;
+  if(!root.classList.contains('js-motion'))return;
+  if(!window.gsap||!window.ScrollTrigger||!window.Lenis){root.classList.remove('js-motion');return;}
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Smooth scroll, wired the way the Lenis README specifies for GSAP.
+  var lenis=new Lenis({lerp:.1});
+  lenis.on('scroll',ScrollTrigger.update);
+  gsap.ticker.add(function(t){lenis.raf(t*1000);});
+  gsap.ticker.lagSmoothing(0);
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href'); if(id.length<2)return;
+      var el=document.querySelector(id); if(!el)return;
+      e.preventDefault(); lenis.scrollTo(el,{offset:-72});
+    });
+  });
+
+  function splitWords(el){
+    el.innerHTML=el.textContent.trim().split(/\s+/).map(function(w){return '<span class="w"><span>'+w+'</span></span>';}).join(' ');
+    return el.querySelectorAll('.w>span');
+  }
+
+  // Load: the headline rises, the sheet settles onto the stack. This is the one load moment.
+  var intro=gsap.timeline({defaults:{ease:'expo.out'}});
+  intro.from(splitWords(document.querySelector('.hero h1')),{yPercent:115,duration:1.15,stagger:.05})
+       .from('.hero .lede,.hero-ctas',{y:18,opacity:0,duration:1,stagger:.08},.35)
+       .from('.sheet-stack',{y:80,rotate:-5,opacity:0,duration:1.4},.15)
+       .from('.doc',{opacity:0,duration:.8},.7);
+
+  // Steps: the active one is lit, the rail fills as you go.
+  var steps=gsap.utils.toArray('.step');
+  steps.forEach(function(s){ScrollTrigger.create({trigger:s,start:'top 62%',end:'bottom 38%',toggleClass:'on'});});
+  gsap.fromTo('.rail i',{scaleY:0},{scaleY:1,ease:'none',scrollTrigger:{trigger:'.steps',start:'top 60%',end:'bottom 75%',scrub:true}});
+
+  // Each step scrubs its own part of the sheet, so scrolling back up rewinds it exactly.
+  function seg(i){
+    return gsap.timeline({defaults:{ease:'none'},
+      scrollTrigger:{trigger:steps[i],start:'top 82%',end:'center 50%',scrub:.6,invalidateOnRefresh:true}});
+  }
+  var body=document.querySelector('.sheet-body');
+  window.__story(seg,body);
+
+  // Closing call to action: one reveal, played once.
+  var eng=document.querySelector('.engage h2');
+  if(eng){gsap.from(splitWords(eng),{yPercent:115,duration:1.1,ease:'expo.out',stagger:.05,
+    scrollTrigger:{trigger:eng,start:'top 82%',once:true}});}
+
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){ScrollTrigger.refresh();});}
+})();
+</script>
 </body>
 </html>
