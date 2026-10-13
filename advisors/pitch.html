@@ -4,55 +4,50 @@
 <meta charset="utf8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Null for Advisors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#ffffff; --bg-alt:#f5f5f7; --surface:#ffffff; --line:rgba(0,0,0,.08);
-    --ink:#1d1d1f; --ink-dim:#86868b; --ink-faint:#a1a1a6;
-    --accent:#0066cc; --accent-strong:#0071e3; --accent-ink:#ffffff; --accent-soft:#e8f0fb;
-    --accent2:#7c3aed; --accent2-soft:#f1e9fd;
-    --good:#1d7a3c; --good-soft:#e7f5ea; --bad:#c23b2a; --bad-soft:#fbe9e6;
+    --ink:#0B1220; --paper:#111A2E; --line:rgba(231,236,245,.12);
+    --text:#E7ECF5; --text-dim:#8792A8; --text-faint:#5B6479;
+    --accent:#2BA98B; --accent-dim:rgba(43,169,139,.16);
+    --bad:#E0644F;
+    --font-head:'Space Grotesk',sans-serif;
     --font:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    --radius:18px; --radius-pill:980px;
-    --glow:radial-gradient(60% 55% at 18% 8%, color-mix(in srgb, var(--accent-strong) 16%, transparent), transparent 60%),
-           radial-gradient(55% 50% at 86% 0%, color-mix(in srgb, var(--accent2) 14%, transparent), transparent 65%);
-    color-scheme:light;
+    --radius:14px;
   }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#000000; --bg-alt:#1d1d1f; --surface:#000000; --line:rgba(255,255,255,.12);
-      --ink:#f5f5f7; --ink-dim:#86868b; --ink-faint:#6e6e73;
-      --accent:#2997ff; --accent-strong:#0a84ff; --accent-ink:#ffffff; --accent-soft:#0d1f30;
-      --accent2:#b985ff; --accent2-soft:#241337;
-      --good:#30d158; --good-soft:#0f2e18; --bad:#ff453a; --bad-soft:#3a120f;
-      color-scheme:dark;
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#000000; --bg-alt:#1d1d1f; --surface:#000000; --line:rgba(255,255,255,.12);
-    --ink:#f5f5f7; --ink-dim:#86868b; --ink-faint:#6e6e73;
-    --accent:#2997ff; --accent-strong:#0a84ff; --accent-ink:#ffffff; --accent-soft:#0d1f30;
-    --accent2:#b985ff; --accent2-soft:#241337;
-    --good:#30d158; --good-soft:#0f2e18; --bad:#ff453a; --bad-soft:#3a120f;
-    color-scheme:dark;
-  }
-
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.47059;-webkit-font-smoothing:antialiased}
-  h1,h2,h3{font-family:var(--font);font-weight:600;letter-spacing:-0.015em;margin:0;text-wrap:balance}
+  body{margin:0;background:var(--ink);color:var(--text);font-family:var(--font);
+       line-height:1.55;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:var(--font-head);font-weight:600;letter-spacing:-0.01em;margin:0;text-wrap:balance}
   a{color:var(--accent);text-decoration:none}
   a:hover{text-decoration:underline}
-  .wrap{max-width:1040px;margin:0 auto;padding-inline:22px}
+  .wrap{max-width:1040px;margin:0 auto;padding-inline:24px}
   @media (max-width:640px){.wrap{padding-inline:18px}}
-  .eyebrow{font-size:.78rem;letter-spacing:.02em;color:var(--ink-dim);font-weight:600}
-  code{font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:.92em;background:var(--bg-alt);padding:.15em .4em;border-radius:5px}
   .rule{height:1px;background:var(--line);border:0;margin:0}
-  section{padding-block:84px}
-  @media (max-width:640px){section{padding-block:54px}}
-  .bg-alt{background:var(--bg-alt)}
-  .section-head{margin-bottom:40px;max-width:680px;margin-inline:auto;text-align:center}
-  .section-head h2{font-size:clamp(1.7rem,3.6vw,2.5rem)}
-  .section-head p{color:var(--ink-dim);margin:14px 0 0;font-size:1.08rem}
-  .chevron::after{content:" \203A";font-weight:600}
+  section{padding-block:88px}
+  @media (max-width:640px){section{padding-block:56px}}
+
+  header.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb, var(--ink) 85%, transparent);
+             backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding-block:16px}
+  .brand{display:flex;align-items:center;gap:9px;font-family:var(--font-head);font-weight:600;font-size:1rem}
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .nav-links{display:flex;gap:30px;font-size:.88rem;color:var(--text-dim)}
+  .nav-links a{color:var(--text-dim)}
+  .nav-links a:hover{color:var(--text);text-decoration:none}
+
+  .hero{padding-block:100px 70px;text-align:center}
+  .hero .wrap{max-width:720px}
+  .hero h1{font-size:clamp(2.4rem,5.6vw,3.5rem);line-height:1.1}
+  .hero p.lede{font-size:1.15rem;color:var(--text-dim);margin:20px auto 0;max-width:560px;line-height:1.6}
+  .cta-row{display:flex;gap:24px;flex-wrap:wrap;margin-top:34px;align-items:center;justify-content:center}
+  .btn-solid{background:var(--accent);color:#06140F;border:0;border-radius:10px;
+             padding:13px 26px;font-size:.98rem;font-weight:600;display:inline-block}
+  .btn-solid:hover{text-decoration:none;opacity:.9}
+  .btn-ghost{color:var(--text-dim);font-size:.96rem;padding-top:13px}
+  .btn-ghost:hover{color:var(--text)}
 
   @media (prefers-reduced-motion: no-preference){
     .hero h1,.hero p.lede,.hero .cta-row{animation:rise .7s cubic-bezier(.16,1,.3,1) both}
@@ -61,142 +56,78 @@
     @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
   }
 
-  header.nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb, var(--bg) 82%, transparent);
-             backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-  .nav-inner{display:flex;align-items:center;justify-content:space-between;padding-block:13px}
-  .brand{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.98rem}
-  .brand .dot{width:8px;height:8px;border-radius:2px;background:var(--accent-strong);transform:rotate(45deg)}
-  .nav-links{display:flex;gap:28px;font-size:.84rem}
-  .nav-links a{color:var(--ink)}
-  .nav-links a:hover{color:var(--ink-dim);text-decoration:none}
-
-  .hero{padding-block:96px 56px;text-align:center;position:relative;overflow:clip}
-  .hero::before{content:"";position:absolute;inset:0;background:var(--glow);z-index:-1;pointer-events:none}
-  .hero .wrap{max-width:780px}
-  .hero h1{font-size:clamp(2.3rem,6vw,3.6rem);line-height:1.08;font-weight:700}
-  .hero h1 .grad{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));
-                  -webkit-background-clip:text;background-clip:text;color:transparent}
-  .hero p.lede{font-size:1.22rem;color:var(--ink-dim);margin:18px auto 0;max-width:600px}
-  .cta-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:30px;align-items:center;justify-content:center}
-  .btn-solid{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));color:var(--accent-ink);
-             border:1px solid transparent;border-radius:var(--radius-pill);
-             padding:12px 24px;font-size:.98rem;font-weight:500;box-shadow:0 8px 24px -10px color-mix(in srgb, var(--accent-strong) 55%, transparent)}
-  .btn-solid:hover{text-decoration:none;opacity:.9}
-  .cta-row > a.chevron{font-size:1rem;font-weight:500;padding-top:12px}
-
-  .track-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-  @media (max-width:900px){.track-grid{grid-template-columns:1fr}}
-  .track{border-radius:var(--radius);padding:30px 26px;background:var(--surface);border:1px solid var(--line);
-         position:relative;overflow:clip;transition:transform .25s ease,box-shadow .25s ease}
-  .track::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;
-                  background:linear-gradient(90deg,var(--accent-strong),var(--accent2))}
-  .track:hover{transform:translateY(-3px);box-shadow:0 16px 32px -18px color-mix(in srgb, var(--ink) 25%, transparent)}
-  .bg-alt .track{background:var(--bg)}
-  .track .icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-               font-size:1.2rem;margin-bottom:16px;background:var(--accent-soft);color:var(--accent-strong)}
-  .track.featured .icon{background:linear-gradient(135deg,var(--accent-soft),var(--accent2-soft));color:var(--accent2)}
-  .track .status{display:inline-flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;letter-spacing:.02em;
-                  border-radius:999px;padding:5px 12px;margin-bottom:16px}
-  .track.proven .status{color:var(--good);background:var(--good-soft)}
-  .track.early .status{color:var(--accent-strong);background:var(--accent-soft)}
-  .track h3{font-size:1.18rem;font-weight:600}
-  .track p{color:var(--ink-dim);margin:12px 0 0;font-size:.95rem}
-  .track ul{margin:16px 0 0;padding-left:20px;color:var(--ink-dim);font-size:.92rem}
-  .track li{margin-top:7px}
-
-  .layer-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px}
-  @media (max-width:760px){.layer-grid{grid-template-columns:1fr}}
-  .layer{border-radius:var(--radius);padding:28px;background:var(--surface);border:1px solid var(--line);
-         border-left:3px solid var(--accent-strong)}
-  .layer:nth-child(2){border-left-color:var(--accent2)}
-  .bg-alt .layer{background:var(--bg)}
-  .layer .tag{font-size:.76rem;font-weight:600;color:var(--ink-faint)}
-  .layer h3{font-size:1.12rem;margin-top:8px;font-weight:600}
-  .layer p{color:var(--ink-dim);margin:10px 0 0;font-size:.94rem}
-
-  .stat-grid{display:flex;align-items:stretch;gap:20px;justify-content:center;flex-wrap:wrap}
-  .stat{flex:1;min-width:240px;max-width:340px;text-align:center;padding:30px 24px;border-radius:var(--radius);
-        background:var(--surface);border:1px solid var(--line)}
-  .stat-label{font-size:.78rem;font-weight:600;letter-spacing:.02em;color:var(--ink-faint)}
-  .stat-num{font-family:var(--font);font-size:clamp(2rem,5.5vw,2.9rem);font-weight:700;letter-spacing:-0.02em;margin:8px 0 10px;color:var(--ink-dim)}
-  .stat.hl{background:linear-gradient(165deg,color-mix(in srgb, var(--accent-strong) 10%, var(--surface)),var(--surface));
-           border-color:color-mix(in srgb, var(--accent-strong) 35%, var(--line))}
-  .stat.hl .stat-num{background:linear-gradient(100deg,var(--accent-strong),var(--accent2));
-                      -webkit-background-clip:text;background-clip:text;color:transparent}
-  .stat p{color:var(--ink-dim);font-size:.92rem;margin:0}
-  .stat-arrow{font-size:1.8rem;color:var(--accent2);font-weight:300;align-self:center}
-  @media (max-width:640px){.stat-arrow{transform:rotate(90deg)}}
-
-  .incidents{display:flex;flex-direction:column;gap:16px}
-  .incident{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px 28px 26px;
-            border-top:3px solid var(--accent2)}
-  .bg-alt .incident{background:var(--bg)}
-  .incident-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
-  .incident-no{font-size:.78rem;color:var(--ink-faint)}
-  .stamp{font-size:.72rem;font-weight:600;color:var(--good);background:var(--good-soft);border-radius:999px;padding:5px 12px}
-  .incident h3{font-size:1.14rem;font-weight:600;margin-top:10px}
-  .incident p{color:var(--ink-dim);margin:10px 0 0;max-width:700px;font-size:.96rem}
-  .metric-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-  .metric{font-size:.84rem;background:var(--bg-alt);border-radius:8px;padding:7px 12px}
-  .bg-alt .metric{background:var(--surface);border:1px solid var(--line)}
-  .metric b{color:var(--good);font-weight:600}
-
-  .flow{display:flex;flex-direction:column;gap:20px;max-width:680px;margin-inline:auto}
-  .flow-step{display:flex;gap:18px;align-items:flex-start;text-align:left}
-  .flow-n{font-weight:600;color:var(--accent-strong);font-size:.92rem;min-width:28px}
-  .flow-step p{margin:0;color:var(--ink-dim)}
-  .flow-step strong{color:var(--ink)}
-
-  .boundary-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media (max-width:760px){.boundary-grid{grid-template-columns:1fr}}
-  .boundary{border-radius:var(--radius);padding:26px;border:1px solid var(--line)}
-  .boundary .fn{font-weight:600;font-size:.92rem}
-  .boundary.is .fn{color:var(--good)}
-  .boundary.isnt .fn{color:var(--bad)}
-  .boundary ul{margin:12px 0 0;padding-left:18px;color:var(--ink-dim);font-size:.92rem;text-align:left}
-  .boundary li{margin-top:6px}
-
-  .engage-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  @media (max-width:760px){.engage-grid{grid-template-columns:1fr}}
-  .engage{border:1px solid var(--line);border-radius:var(--radius);padding:28px;background:var(--surface);text-align:left}
-  .bg-alt .engage{background:var(--bg)}
-  .engage.featured{border-color:var(--accent-strong)}
-  .engage .fn{font-weight:600;font-size:1.06rem}
-  .engage .price{color:var(--accent-strong);font-weight:500;margin-top:4px;font-size:.96rem}
-  .engage p{color:var(--ink-dim);margin:12px 0 0;font-size:.94rem}
-
-  .install-box{display:flex;align-items:center;gap:10px;background:var(--bg-alt);color:var(--ink);border-radius:999px;
-               padding:10px 8px 10px 20px;font-size:.92rem;border:1px solid var(--line)}
-  .copy-btn{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:999px;
-            font-size:.78rem;padding:7px 14px;cursor:pointer;white-space:nowrap}
-  .copy-btn:hover{border-color:var(--accent-strong)}
-
-  .submit-box{max-width:640px;margin-top:40px;padding:32px;border-radius:var(--radius);
-              border:1px solid var(--line);background:var(--surface)}
-  .submit-box h3{font-size:1.1rem;font-weight:600;margin-bottom:20px}
-  .field{margin-bottom:18px}
-  .field label{display:block;font-size:.84rem;font-weight:600;margin-bottom:7px}
-  .field label .opt{color:var(--ink-faint);font-weight:500}
-  .submit-box input,.submit-box select,.submit-box textarea{
-    width:100%;font:inherit;font-size:.96rem;padding:12px 14px;border-radius:12px;
-    border:1px solid var(--line);background:var(--bg);color:var(--ink);
+  /* ---- the ledger: one continuous scroll-synced device, not per-card animation ---- */
+  .ledger-head{max-width:620px;margin-bottom:56px}
+  .ledger-head h2{font-size:clamp(1.6rem,3.2vw,2.2rem)}
+  .ledger-head p{color:var(--text-dim);margin-top:14px;font-size:1.04rem}
+  .ledger-wrap{display:grid;grid-template-columns:120px 1fr;gap:40px}
+  @media (max-width:700px){.ledger-wrap{grid-template-columns:36px 1fr;gap:20px}}
+  .ledger-rail{position:relative}
+  .ledger-track{position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
+  @media (max-width:700px){.ledger-track{left:3px}}
+  .ledger-fill{position:absolute;left:5px;top:6px;width:2px;height:0;background:var(--accent)}
+  @media (max-width:700px){.ledger-fill{left:3px}}
+  .ledger-node{position:relative;display:flex;align-items:center;gap:10px;height:168px}
+  .ledger-node:last-child{height:auto}
+  .ledger-dot{width:12px;height:12px;border-radius:50%;background:var(--ink);border:2px solid var(--text-faint);
+              flex-shrink:0;transition:background .3s ease,border-color .3s ease,box-shadow .3s ease}
+  .ledger-node.is-active .ledger-dot{background:var(--accent);border-color:var(--accent);
+                                      box-shadow:0 0 0 5px var(--accent-dim)}
+  .ledger-label{font-family:var(--font-head);font-size:.86rem;color:var(--text-faint);font-weight:600;
+                transition:color .3s ease}
+  @media (max-width:700px){.ledger-label{display:none}}
+  .ledger-node.is-active .ledger-label{color:var(--accent)}
+  .ledger-content{display:flex;flex-direction:column}
+  .ledger-stage{min-height:168px;display:flex;flex-direction:column;justify-content:center;padding-block:16px}
+  .ledger-stage .k{display:none}
+  @media (max-width:700px){
+    .ledger-stage .k{display:block;font-family:var(--font-head);font-size:.82rem;color:var(--accent);
+                      font-weight:600;margin-bottom:8px}
   }
-  .submit-box textarea{resize:vertical;min-height:90px;font-family:ui-monospace,'SF Mono',Menlo,monospace}
-  .submit-box input:focus,.submit-box select:focus,.submit-box textarea:focus{outline:2px solid var(--accent-strong);outline-offset:1px}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-  @media (max-width:560px){.row2{grid-template-columns:1fr}}
-  .hint{font-size:.82rem;color:var(--ink-faint);margin-top:6px}
-  .submit-box .btn-solid{width:100%;border:0;cursor:pointer}
-  .err{display:none;margin-top:14px;padding:14px 16px;border-radius:12px;background:var(--bad-soft);
-       color:var(--bad);font-size:.88rem}
-  .sent{display:none;text-align:center;padding:24px 0}
-  .sent .check{width:52px;height:52px;border-radius:50%;background:var(--good-soft);color:var(--good);
-               display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin:0 auto 16px}
-  .sent h3{font-size:1.1rem}
-  .sent p{color:var(--ink-dim);margin:8px auto 0;max-width:400px;font-size:.92rem}
+  .ledger-stage h3{font-size:1.3rem}
+  .ledger-stage p{color:var(--text-dim);margin-top:10px;font-size:1rem;max-width:520px}
+  .ledger-stage ul{margin:14px 0 0;padding-left:0;list-style:none;max-width:520px}
+  .ledger-stage li{color:var(--text-dim);font-size:.96rem;padding:7px 0 7px 18px;position:relative;
+                    border-top:1px solid var(--line)}
+  .ledger-stage li:first-child{border-top:0}
+  .ledger-stage li::before{content:"";position:absolute;left:0;top:16px;width:6px;height:6px;
+                            border-radius:50%;background:var(--accent)}
 
-  footer{border-top:1px solid var(--line);padding-block:30px;color:var(--ink-faint);font-size:.82rem;text-align:center}
-  footer .disclaimer{max-width:680px;margin:14px auto 0;font-size:.8rem;line-height:1.6}
+  /* ---- plain sequential flow (working-together steps: a real sequence, numbers earned) ---- */
+  .flow{display:flex;flex-direction:column;max-width:640px}
+  .flow-step{display:flex;gap:20px;padding-block:20px;border-top:1px solid var(--line)}
+  .flow-step:first-child{border-top:0}
+  .flow-n{font-family:var(--font-head);font-weight:600;color:var(--accent);font-size:.92rem;min-width:24px}
+  .flow-step p{margin:0;color:var(--text-dim)}
+  .flow-step strong{color:var(--text);display:block;margin-bottom:4px;font-family:var(--font-head);font-weight:600}
+
+  /* ---- boundaries: two plain columns, a rule between, no card/shadow kit ---- */
+  .boundary-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid var(--line)}
+  @media (max-width:700px){.boundary-grid{grid-template-columns:1fr}}
+  .boundary{padding:32px 36px}
+  .boundary:first-child{border-right:1px solid var(--line)}
+  @media (max-width:700px){.boundary:first-child{border-right:0;border-bottom:1px solid var(--line)}}
+  .boundary .fn{font-family:var(--font-head);font-weight:600;font-size:1rem}
+  .boundary.is .fn{color:var(--accent)}
+  .boundary.isnt .fn{color:var(--bad)}
+  .boundary ul{margin:16px 0 0;padding-left:0;list-style:none}
+  .boundary li{color:var(--text-dim);font-size:.94rem;padding:9px 0;border-top:1px solid var(--line)}
+  .boundary li:first-child{border-top:0}
+
+  .engage-head{max-width:560px}
+  .engage-head h2{font-size:clamp(1.6rem,3.2vw,2.2rem)}
+  .engage-head p{color:var(--text-dim);margin-top:12px}
+  .submit-box{max-width:480px;margin-top:32px;padding:0}
+  .submit-box .btn-solid{display:block;text-align:center;width:100%}
+  .install-box{display:inline-flex;align-items:center;gap:10px;color:var(--text-dim);
+               border-radius:999px;padding:9px 8px 9px 18px;font-size:.9rem;border:1px solid var(--line);
+               margin-top:22px}
+  .copy-btn{background:transparent;color:var(--text);border:1px solid var(--line);border-radius:999px;
+            font-size:.76rem;padding:6px 13px;cursor:pointer;white-space:nowrap}
+  .copy-btn:hover{border-color:var(--accent)}
+
+  footer{border-top:1px solid var(--line);padding-block:32px;color:var(--text-faint);font-size:.84rem}
+  footer .disclaimer{max-width:620px;margin-top:12px;font-size:.82rem;line-height:1.6}
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.css"
       integrity="sha384-gvLq/iOMNnPchdosgVym5huSVkKipHCQaqSw2Eg0V52Mzmlf169ZOsXcNc2cNu8x" crossorigin="anonymous">
@@ -207,7 +138,7 @@
   <div class="wrap nav-inner">
     <div class="brand"><span class="dot"></span> null / advisors</div>
     <nav class="nav-links">
-      <a href="#capabilities">Capabilities</a>
+      <a href="#ledger">How it works</a>
       <a href="#engage">Engage</a>
     </nav>
   </div>
@@ -215,128 +146,68 @@
 
 <section class="hero">
   <div class="wrap">
-    <p class="eyebrow">An expedited research tool for advisory teams</p>
-    <h1>Give your analysts back <span class="grad">their time</span></h1>
+    <h1>Give your analysts back their time</h1>
     <p class="lede">This is a research tool for the diligence your team is already doing. It reads news,
       SEC filings, and analyst coverage, and returns a dated, sourced report in minutes instead of hours.
       Every call is logged and checked against what actually happened.</p>
     <div class="cta-row">
       <a class="btn-solid" href="intake.html">Expedite your analysis</a>
-      <a class="chevron" href="#how">See how this works</a>
+      <a class="btn-ghost" href="#ledger">See how this works</a>
     </div>
   </div>
 </section>
 
-<section id="selfgrading" class="bg-alt">
+<section id="ledger">
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">How accuracy is tracked</p>
-      <h2>Every call is logged and checked against what actually happened</h2>
-      <p>Each call is logged: the read, the confidence, and the price at the time. It's checked later
-        against the real outcome, using public market data.</p>
+    <div class="ledger-head">
+      <h2>One request, fully accounted for</h2>
+      <p>This is the whole mechanism, start to finish. The reading is AI. Everything after it is just
+        logged and checked.</p>
     </div>
-    <div class="layer-grid">
-      <div class="layer">
-        <div class="tag">Self-grading</div>
-        <h3>A real, checkable track record</h3>
-        <p>Every call is scored against what actually happened, split out by stated confidence, building
-          a real record of accuracy you can audit yourself over time.</p>
+    <div class="ledger-wrap">
+      <div class="ledger-rail">
+        <div class="ledger-track"></div>
+        <div class="ledger-fill" id="ledgerFill"></div>
+        <div class="ledger-node" data-i="0"><span class="ledger-dot"></span><span class="ledger-label">Request</span></div>
+        <div class="ledger-node" data-i="1"><span class="ledger-dot"></span><span class="ledger-label">Research</span></div>
+        <div class="ledger-node" data-i="2"><span class="ledger-dot"></span><span class="ledger-label">Structured read</span></div>
+        <div class="ledger-node" data-i="3"><span class="ledger-dot"></span><span class="ledger-label">Logged</span></div>
+        <div class="ledger-node" data-i="4"><span class="ledger-dot"></span><span class="ledger-label">Checked</span></div>
       </div>
-      <div class="layer">
-        <div class="tag">Calibration audit</div>
-        <h3>Finding its own blind spots</h3>
-        <p>Once there's enough graded history, Claude reviews its own track record for patterns. Each
-          finding is descriptive, citing its real sample size.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="capacity">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">What this actually changes</p>
-      <h2>The reading used to be the bottleneck. Now it isn't.</h2>
-      <p>This extends your team rather than replacing it. The same people can go deeper on every name
-        under consideration, in the time it used to take to get through one. The slow part no longer eats
-        the day.</p>
-    </div>
-    <div class="stat-grid">
-      <div class="stat">
-        <div class="stat-label">The old way</div>
-        <div class="stat-num">An hour or two</div>
-        <p>per filing or per name, read and briefed by hand</p>
-      </div>
-      <div class="stat-arrow">→</div>
-      <div class="stat hl">
-        <div class="stat-label">What changes</div>
-        <div class="stat-num">A couple of minutes</div>
-        <p>for the first pass. A person reviews it and decides from there</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="capabilities" class="bg-alt">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">Three tools, one set of checks</p>
-      <h2>These help you research</h2>
-      <p>All three are logged and checked against what actually happened, with the same checks built into
-        every one.</p>
-    </div>
-    <div class="track-grid">
-      <article class="track featured">
-        <span class="icon">◆</span>
-        <h3>Expedited due diligence</h3>
-        <p>Runs seven independently-checkable criteria on any name under consideration, including analyst
-          target gap, insider activity, and an active search for the strongest case against it.</p>
-        <ul>
-          <li>Every claim comes with a real number and a citation</li>
-          <li>Confidence reflects how much of the evidence actually agrees</li>
-        </ul>
-      </article>
-      <article class="track">
-        <span class="icon">◇</span>
-        <h3>Market &amp; news reading</h3>
-        <p>Reads the last ten days of news on a name and explains what changed and whether the price has
-          already caught up to it.</p>
-        <ul>
-          <li>Every source is cited and logged for later review</li>
-        </ul>
-      </article>
-      <article class="track">
-        <span class="icon">▢</span>
-        <h3>SEC filing reading</h3>
-        <p>Reads a company's actual 10-K, 10-Q, or 8-K and flags what changed since the last filing.</p>
-        <ul>
-          <li>Reads the primary document itself, every time</li>
-        </ul>
-      </article>
-    </div>
-  </div>
-</section>
-
-<section id="mechanism">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">How the AI part actually works</p>
-      <h2>Two layers. Only one of them is AI.</h2>
-      <p>The AI does the reading and writing. The checking is just math.</p>
-    </div>
-    <div class="layer-grid">
-      <div class="layer">
-        <div class="tag">Layer 1: Checking</div>
-        <h3>Plain math</h3>
-        <p>Scores every past read against the real price move that followed, using free market data,
-          split out by stated confidence. Same input, same answer, every time.</p>
-      </div>
-      <div class="layer">
-        <div class="tag">Layer 2: Research</div>
-        <h3>Where the AI actually works</h3>
-        <p>Claude reads the filings and the news, searches systematically, and turns what it finds into a
-          structured read: a sentiment, a confidence level, and the sources used. It's fast, and checked
-          by the layer above every time.</p>
+      <div class="ledger-content">
+        <div class="ledger-stage">
+          <span class="k">Request</span>
+          <h3>A name comes in</h3>
+          <p>Reading used to be the bottleneck: an hour or two per filing or per name, read and briefed
+            by hand. That's the part this replaces, not your judgment on what to do with it.</p>
+        </div>
+        <div class="ledger-stage">
+          <span class="k">Research</span>
+          <h3>Claude reads it</h3>
+          <ul>
+            <li>News and analyst coverage from the last ten days, read in context</li>
+            <li>The company's actual SEC filing, not a secondary summary of it</li>
+            <li>For a name already under real consideration, seven independently-checkable criteria</li>
+          </ul>
+        </div>
+        <div class="ledger-stage">
+          <span class="k">Structured read</span>
+          <h3>Turned into one written call</h3>
+          <p>A sentiment, a confidence level, the actual sources used. The reading and writing is where
+            the AI works. What happens next isn't.</p>
+        </div>
+        <div class="ledger-stage">
+          <span class="k">Logged</span>
+          <h3>The call is recorded</h3>
+          <p>The read, the stated confidence, the price at the time. Every call, not just the ones that
+            turn out right later.</p>
+        </div>
+        <div class="ledger-stage">
+          <span class="k">Checked</span>
+          <h3>Against what actually happened</h3>
+          <p>Weeks later, scored against the real outcome, split out by how confident it said it was at
+            the time. A real, growing record you can audit yourself, not a claim about one.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -344,9 +215,9 @@
 
 <section id="how">
   <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">How working together looks</p>
-      <h2>Your data never leaves your systems</h2>
+    <div class="ledger-head">
+      <h2>Working together</h2>
+      <p>Your data never leaves your systems.</p>
     </div>
     <div class="flow">
       <div class="flow-step"><span class="flow-n">01</span><p><strong>We scope it.</strong> A short call defines exactly what gets covered: a watchlist, a set of filings, one real question. All of it agreed before anything starts.</p></div>
@@ -358,7 +229,7 @@
   </div>
 </section>
 
-<section id="boundaries" class="bg-alt">
+<section id="boundaries">
   <div class="wrap">
     <div class="boundary-grid">
       <div class="boundary is">
@@ -390,13 +261,12 @@
 
 <section id="engage">
   <div class="wrap">
-    <div class="submit-box">
-      <h3>Expedite your analysis</h3>
-      <a href="intake.html" class="btn-solid"
-         style="display:block;text-align:center;text-decoration:none;margin-top:18px">Expedite your analysis</a>
+    <div class="engage-head">
+      <h2>Expedite your analysis</h2>
+      <p>Send a name and what you've got so far. It goes directly to the person who runs the research.</p>
     </div>
-
-    <div class="cta-row" style="margin-top:20px;justify-content:flex-start">
+    <div class="submit-box">
+      <a href="intake.html" class="btn-solid">Expedite your analysis</a>
       <div class="install-box">
         <code id="contact-email">grant02339@gmail.com</code>
         <button class="copy-btn" onclick="copyEmail()" id="copy-email-btn">Copy</button>
@@ -431,8 +301,10 @@ function copyEmail(){
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"
         integrity="sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw" crossorigin="anonymous"></script>
 <script>
-// Guarded the same way the hero's own CSS entrance already is (prefers-reduced-motion) -- smooth
-// scrolling and scroll-triggered reveals are both motion effects some users turn off on purpose.
+// One orchestrated scroll device for the whole page, not per-section fades: a single scrubbed timeline
+// draws the ledger line and lights each node as its matching content stage scrolls into the reading
+// position. Driven entirely by scroll position (scrub: true), not time, so it's the same "one smooth
+// scroll animation" whether someone scrolls fast, slow, or back up.
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.registerPlugin(ScrollTrigger);
 
@@ -441,15 +313,24 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.ticker.add(function(time){ lenis.raf(time * 1000); });
   gsap.ticker.lagSmoothing(0);
 
-  // Hero already has its own CSS entrance animation -- excluded here so it isn't animated twice.
-  gsap.utils.toArray('section:not(.hero)').forEach(function(el){
-    gsap.from(el, {
-      opacity: 0,
-      y: 24,
-      duration: 0.7,
-      ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 85%' },
-    });
+  var nodes = gsap.utils.toArray('.ledger-node');
+  var fill = document.getElementById('ledgerFill');
+
+  gsap.to(fill, {
+    height: '100%',
+    ease: 'none',
+    scrollTrigger: {
+      trigger: '.ledger-wrap',
+      start: 'top 55%',
+      end: 'bottom 55%',
+      scrub: true,
+      onUpdate: function(self){
+        var step = 1 / (nodes.length - 1);
+        nodes.forEach(function(node, i){
+          node.classList.toggle('is-active', self.progress >= i * step - 0.02);
+        });
+      },
+    },
   });
 }
 </script>
