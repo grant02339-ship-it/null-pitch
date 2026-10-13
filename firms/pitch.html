@@ -489,15 +489,38 @@ function copyEmail(){
        .from('.sheet-stack',{y:80,rotate:-5,opacity:0,duration:1.4},.15)
        .from('.doc',{opacity:0,duration:.8},.7);
 
-  // Steps: the active one is lit, the rail fills as you go.
+  // One reading line drives both the lit step and the sheet, so they can't drift apart. A step lights up
+  // when its first line of text reaches the reading line and stays lit until the next step's text gets
+  // there, so exactly one is lit at a time. Its part of the sheet starts at that same moment and finishes
+  // while the text is still being read (the sheet trails the words a little, then holds). On phones the
+  // sheet pins under the nav and covers the top of the screen, so the reading line moves into the visible
+  // strip below it.
   var steps=gsap.utils.toArray('.step');
-  steps.forEach(function(s){ScrollTrigger.create({trigger:s,start:'top 62%',end:'bottom 38%',toggleClass:'on'});});
-  gsap.fromTo('.rail i',{scaleY:0},{scaleY:1,ease:'none',scrollTrigger:{trigger:'.steps',start:'top 60%',end:'bottom 75%',scrub:true}});
+  var heads=steps.map(function(s){return s.querySelector('.verb')||s;});
+  var phone=window.matchMedia('(max-width:900px)');
+  function zone(){
+    var vh=window.innerHeight;
+    if(!phone.matches)return {top:0,height:vh};
+    var nav=document.querySelector('.nav'), stick=document.querySelector('.sheet-stick');
+    var top=(nav?nav.offsetHeight:0)+(stick?stick.offsetHeight:0);
+    return {top:top,height:Math.max(vh-top,120)};
+  }
+  function at(f){var z=zone();return 'top '+Math.round(z.top+z.height*f)+'px';}
+  function readLine(){return at(phone.matches?.55:.58);}
+  function doneLine(){return at(phone.matches?.12:.3);}
+  heads.forEach(function(h,i){
+    var last=i===heads.length-1;
+    ScrollTrigger.create({trigger:h,start:readLine,endTrigger:last?'.steps':heads[i+1],
+      end:last?'bottom top':readLine,toggleClass:{targets:steps[i],className:'on'},invalidateOnRefresh:true});
+  });
+  gsap.fromTo('.rail i',{scaleY:0},{scaleY:1,ease:'none',scrollTrigger:{trigger:heads[0],start:readLine,
+    endTrigger:heads[heads.length-1],end:readLine,scrub:true,invalidateOnRefresh:true}});
 
-  // Each step scrubs its own part of the sheet, so scrolling back up rewinds it exactly.
+  // Each step scrubs its own part of the sheet, so scrolling back up rewinds it exactly. scrub:.5 adds a
+  // short catch-up lag, so a fast flick still plays the change rather than jumping to the end of it.
   function seg(i){
     return gsap.timeline({defaults:{ease:'none'},
-      scrollTrigger:{trigger:steps[i],start:'top 82%',end:'center 50%',scrub:.6,invalidateOnRefresh:true}});
+      scrollTrigger:{trigger:heads[i],start:readLine,end:doneLine,scrub:.5,invalidateOnRefresh:true}});
   }
   var body=document.querySelector('.sheet-body');
   window.__story(seg,body);
