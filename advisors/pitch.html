@@ -19,7 +19,22 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--ink);color:var(--text);font-family:var(--font);
-       line-height:1.55;-webkit-font-smoothing:antialiased}
+       line-height:1.55;-webkit-font-smoothing:antialiased;position:relative;overflow-x:clip}
+
+  /* ---- continuous ambient motion, running whether or not anyone scrolls ---- */
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:clip}
+  .ambient span{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5}
+  .ambient span:nth-child(1){width:52vw;height:52vw;background:var(--accent);top:-18vw;left:-14vw;
+                              animation:drift1 26s ease-in-out infinite}
+  .ambient span:nth-child(2){width:38vw;height:38vw;background:#1C6FEB;top:40vh;right:-12vw;
+                              animation:drift2 32s ease-in-out infinite}
+  .ambient span:nth-child(3){width:30vw;height:30vw;background:var(--accent);bottom:-10vw;left:18vw;
+                              animation:drift3 22s ease-in-out infinite}
+  @keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(6vw,8vh) scale(1.15)}}
+  @keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-7vw,-6vh) scale(1.1)}}
+  @keyframes drift3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(5vw,-7vh) scale(1.2)}}
+  @media (prefers-reduced-motion: reduce){.ambient span{animation:none}}
+  body > *:not(.ambient){position:relative;z-index:1}
   h1,h2,h3{font-family:var(--font-head);font-weight:600;letter-spacing:-0.01em;margin:0;text-wrap:balance}
   a{color:var(--accent);text-decoration:none}
   a:hover{text-decoration:underline}
@@ -63,22 +78,26 @@
   .ledger-wrap{display:grid;grid-template-columns:120px 1fr;gap:40px}
   @media (max-width:700px){.ledger-wrap{grid-template-columns:36px 1fr;gap:20px}}
   .ledger-rail{position:relative}
-  .ledger-track{position:absolute;left:5px;top:6px;bottom:6px;width:2px;background:var(--line)}
-  @media (max-width:700px){.ledger-track{left:3px}}
-  .ledger-fill{position:absolute;left:5px;top:6px;width:2px;height:0;background:var(--accent)}
-  @media (max-width:700px){.ledger-fill{left:3px}}
+  .ledger-track{position:absolute;left:4px;top:6px;bottom:6px;width:4px;background:var(--line);border-radius:2px}
+  @media (max-width:700px){.ledger-track{left:2px}}
+  .ledger-fill{position:absolute;left:4px;top:6px;width:4px;height:0;background:var(--accent);border-radius:2px;
+               box-shadow:0 0 24px 2px var(--accent), 0 0 60px 8px var(--accent-dim)}
+  @media (max-width:700px){.ledger-fill{left:2px}}
   .ledger-node{position:relative;display:flex;align-items:center;gap:10px;height:168px}
   .ledger-node:last-child{height:auto}
-  .ledger-dot{width:12px;height:12px;border-radius:50%;background:var(--ink);border:2px solid var(--text-faint);
-              flex-shrink:0;transition:background .3s ease,border-color .3s ease,box-shadow .3s ease}
+  .ledger-dot{width:14px;height:14px;border-radius:50%;background:var(--ink);border:2px solid var(--text-faint);
+              flex-shrink:0;transition:background .3s ease,border-color .3s ease;position:relative}
   .ledger-node.is-active .ledger-dot{background:var(--accent);border-color:var(--accent);
-                                      box-shadow:0 0 0 5px var(--accent-dim)}
+                                      animation:dotPulse 1.8s ease-in-out infinite}
+  @keyframes dotPulse{0%,100%{box-shadow:0 0 0 0 var(--accent-dim)}50%{box-shadow:0 0 0 9px transparent}}
+  @media (prefers-reduced-motion: reduce){.ledger-node.is-active .ledger-dot{animation:none;box-shadow:0 0 0 6px var(--accent-dim)}}
   .ledger-label{font-family:var(--font-head);font-size:.86rem;color:var(--text-faint);font-weight:600;
-                transition:color .3s ease}
+                transition:color .3s ease,transform .3s ease}
   @media (max-width:700px){.ledger-label{display:none}}
-  .ledger-node.is-active .ledger-label{color:var(--accent)}
+  .ledger-node.is-active .ledger-label{color:var(--accent);transform:translateX(3px)}
   .ledger-content{display:flex;flex-direction:column}
-  .ledger-stage{min-height:168px;display:flex;flex-direction:column;justify-content:center;padding-block:16px}
+  .ledger-stage{min-height:168px;display:flex;flex-direction:column;justify-content:center;padding-block:16px;
+                transform-origin:left center;will-change:transform,opacity}
   .ledger-stage .k{display:none}
   @media (max-width:700px){
     .ledger-stage .k{display:block;font-family:var(--font-head);font-size:.82rem;color:var(--accent);
@@ -133,6 +152,8 @@
       integrity="sha384-gvLq/iOMNnPchdosgVym5huSVkKipHCQaqSw2Eg0V52Mzmlf169ZOsXcNc2cNu8x" crossorigin="anonymous">
 </head>
 <body>
+
+<div class="ambient" aria-hidden="true"><span></span><span></span><span></span></div>
 
 <header class="nav">
   <div class="wrap nav-inner">
@@ -301,10 +322,12 @@ function copyEmail(){
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"
         integrity="sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw" crossorigin="anonymous"></script>
 <script>
-// One orchestrated scroll device for the whole page, not per-section fades: a single scrubbed timeline
-// draws the ledger line and lights each node as its matching content stage scrolls into the reading
-// position. Driven entirely by scroll position (scrub: true), not time, so it's the same "one smooth
-// scroll animation" whether someone scrolls fast, slow, or back up.
+// One continuous scroll-scrubbed system for the whole page, not per-section reveals: the ledger line
+// draws, each dot lights, AND each stage's own scale/opacity/blur tracks scroll position directly (a
+// camera-style focus pull through the sequence) -- nothing here plays once and then sits static. Every
+// value is a function of scroll position (scrub), not of time, so it runs the same whether someone
+// scrolls fast, slow, or back up, which is what makes it read as one continuous animation rather than a
+// series of triggered effects.
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.registerPlugin(ScrollTrigger);
 
@@ -314,6 +337,7 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
   gsap.ticker.lagSmoothing(0);
 
   var nodes = gsap.utils.toArray('.ledger-node');
+  var stages = gsap.utils.toArray('.ledger-stage');
   var fill = document.getElementById('ledgerFill');
 
   gsap.to(fill, {
@@ -331,6 +355,38 @@ if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         });
       },
     },
+  });
+
+  // Each stage gets its own scrubbed timeline, keyed to ITS OWN position crossing the focus band (center
+  // of the viewport) -- not visible/invisible like a reveal, but continuously scaling and dimming as it
+  // approaches, holds, and leaves focus, the way a camera racks focus through a sequence of subjects.
+  stages.forEach(function(stage){
+    gsap.fromTo(stage,
+      { opacity: 0.28, scale: 0.9, filter: 'blur(2px)' },
+      {
+        opacity: 1, scale: 1, filter: 'blur(0px)',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: stage,
+          start: 'top 75%',
+          end: 'top 40%',
+          scrub: true,
+        },
+      }
+    );
+    gsap.fromTo(stage,
+      { opacity: 1, scale: 1, filter: 'blur(0px)' },
+      {
+        opacity: 0.28, scale: 0.9, filter: 'blur(2px)',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: stage,
+          start: 'top 30%',
+          end: 'top -20%',
+          scrub: true,
+        },
+      }
+    );
   });
 }
 </script>
